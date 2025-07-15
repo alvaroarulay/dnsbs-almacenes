@@ -1,0 +1,209 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<style>
+	@page {
+		margin: 0cm 0cm;
+	}
+	body{
+		font-family: 'arial', sans-serif;
+		margin-top: 4.5cm;
+		margin-left: 1cm;
+		margin-right: 2cm;
+		margin-bottom: 2cm;
+		width: 18.5cm;
+	}
+	hr{
+		margin: 0;
+		border-top: 1px solid rgb(0, 0, 0);
+	}
+	#customers {
+		border-collapse: collapse;
+        margin-top: 0.2cm;
+		font-size: 6pt;
+	}
+	#customers td {
+		padding: 5px;
+		border-top: 1px solid #ddd;
+	}
+	#customers th{
+		text-align: left;
+		background-color: #ddd;
+		color: black;
+	}
+	.eslogan{
+		font-size: xx-small;
+		font-style: italic;
+	}
+    #cabecera{
+        height: 1cm;
+        margin-top: 0.1cm;
+        margin-bottom: 0.1;
+        padding: 0;
+    }
+	#cabecera tr td{
+		margin:0;
+		padding:0;
+	}
+	header {
+		position: fixed;
+		top: 1cm;
+		left: 1cm;
+		right: 1cm;
+		height: 5cm;
+		}
+
+		/** Definir las reglas del pie de página **/
+	footer {
+		position: fixed;
+		bottom: 0cm;
+		left: 1.5cm;
+		right: 0cm;
+		height: 2cm;
+	}
+	.page-break {
+	    page-break-after: always;
+	}
+</style>
+</head>
+<body>
+    <header>
+        <div style="width: 17.59cm; height: 5cm;">
+            <table>
+                <tr>
+                    <td>
+                        <div style="width: 4cm; height: 3cm; text-align: center;">
+                            <img src="{{ asset('img/sistema.png') }}" alt="" style="width: auto; height: 2cm; ">
+                            <p style="margin: 0.1cm; text-align: center; font-size: x-small; padding: 0;" ><b>POLICIA BOLIVIANA</b></p>
+                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">COMANDO GENERAL</p>
+                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;"><b>DIRECCIÓN NACIONAL DE SALUD</b></p>
+                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;"><b>Y BIENESTAR SOCIAL</b></p>
+                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">{{$ciudad}} - BOLIVIA</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width: 9.59cm; height: 1.5cm;">
+                            <p style="margin: 0.1cm; text-align: center; padding: 0" ><b>{{$titulo}}</b></p>
+							<p style="margin: 0.1cm; text-align: center; padding: 0; font-size: x-small" ><b>{{$subtitulo}}</b></p>
+                            <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">Expresado en BOLIVIANOS (Bs.)</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width: 3cm; height: 1cm; ">
+                            <p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>Página:</b></p>
+                            <p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>Fecha de Impresión:</b></p>
+                            
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width: 1cm; height: 1cm;">
+                            <p style="font-size: xx-small; margin: 0.1cm;"><br></p>
+                            <p style="font-size: xx-small; margin: 0.1cm;">{{$fechaDerecha}}</p>
+                            
+                        </div>
+                    </td>
+                </tr>
+            </table>
+	    </div>
+        
+    </header>
+    <main>
+         <hr>
+		  <table id="cabecera">
+			<tr style=" height: .5cm;">
+				<td >
+					<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>ALMACEN:</b></p>
+				</td>
+				<td style=" height: .5cm; width:7cm;">
+					<p style="font-size: xx-small; margin: 0.1cm;">{{$almacen}}</p>
+				</td>
+			</tr>
+			<tr style=" height: .5cm;">
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>ESTABLECIMIENTO:</b></p>
+				</td>
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm;">{{$establecimiento}}</p>
+				</td>
+			</tr>
+        </table>
+       <table id="customers">
+            <thead>
+                <tr style="border: 1px solid ;">
+                    <th style="width: 1cm; text-align:center">NRO.</th>
+                    <th style="width: 4cm; text-align:center">CÓDIGO</th>
+                    <th style="width: 7.5cm; text-align:center">DESCRIPCIÓN</th>
+					<th style="width: 2cm; text-align:center">CANTIDAD</th>
+					<th style="width: 2cm; text-align:center">PRECIO UNITARIO</th>
+					<th style="width: 2cm; text-align:center">TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($datos as $dato)
+                    <tr>
+                        <td style="text-align:center">{{$loop->iteration}}</td>
+                        <td style="text-align:center">{{$dato->codigo}}</td>
+                        <td>{{$dato->descripcion}}</td>
+						<td style="text-align:right">{{$dato->cantidad}}</td>
+						<td style="text-align:right">{{number_format($dato->precio_unitario, 2, ',', '.')}}</td>	
+						<td style="text-align:right"><b>{{ number_format($dato->cantidad * $dato->precio_unitario, 2, ',', '.')}}</b></td>
+                    </tr>
+            @endforeach
+            </tbody>
+            <tfoot>
+				<tr >
+					<td style="font-size: x-small; text-align: right;" colspan="6" >Cantidad: {{$datos->count()}}</td>
+				</tr>
+				<tr >
+					<td style="font-size: x-small; text-align: right;" colspan="6" >Total: {{number_format($total, 2, ',', '.')}} Bs. </td>
+				</tr>
+			</tfoot>
+        </table>
+		<hr>
+		@if($factura->count()!=0)
+		<h5>Datos de la factura</h5>
+		<table id='customers'>
+			<thead>
+                <tr style="border: 1px solid ;">
+                    <th style="width: 2cm; text-align:center">Fecha</th>
+                    <th style="width: 3.5cm; text-align:center">Razon Social</th>
+                    <th style="width: 2cm; text-align:center">NIT</th>
+					<th style="width: 3cm; text-align:center">Cod. de Autorización</th>
+					<th style="width: 3cm; text-align:center">Cod. de Control</th>
+					<th style="width: 2cm; text-align:center">Nro. de Factura</th>
+					<th style="width: 3cm; text-align:center">Importe de Factura</th>
+                </tr>
+            </thead>
+			<tbody>
+            @foreach ($factura as $f)
+                    <tr>
+                        <td style="text-align:center">{{$f->fecha}}</td>
+                        <td style="text-align:center">{{$f->razon}}</td>
+						<td style="text-align:center">{{$f->nit}}</td>
+						<td style="text-align:center">{{$f->codautorizacion}}</td>
+						<td style="text-align:center">{{$f->codcontrol}}</td>
+						<td style="text-align:center">{{$f->nro}}</td>
+						<td style="text-align:right">{{number_format($f->monto, 2, ',', '.')}} Bs.</td>	
+                    </tr>
+            @endforeach
+            </tbody>
+		</table>
+		@endif
+    </main>
+<footer>
+    <div style="width: 17.59cm; height: 2cm; text-align: center;">
+        <p style="font-size: xx-small; margin: 0.1cm;">Sistema de Almacenes - Policía Boliviana</p>
+        <p class="eslogan">"La seguridad es nuestra misión"</p>
+    </div>
+</footer>
+<script type="text/php">
+		if ( isset($pdf) ) {
+			$pdf->page_script('
+				$font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "NORMAL");
+				$pdf->text(505, 58, "$PAGE_NUM de $PAGE_COUNT", $font, 7);
+			');
+		}
+</script>
+</body>
+</html>

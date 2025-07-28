@@ -200,15 +200,6 @@ import axios from 'axios';
         }
         return pages
         });
-    const obtenerpartidas = async (page,buscar,criterio) => {
-        try {
-            const response = await axios.get('/partidas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio);
-            partidas.value = response.data.partidas.data;
-            Object.assign(pagination, response.data.pagination)
-        } catch (error) {
-            console.error('Error al obtener los partidas:', error);
-        }
-    };
     const obtenereUnidades = async (page,buscar,criterio) => {
         try {
             const response = await axios.get('/unidades?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio);
@@ -272,13 +263,21 @@ import axios from 'axios';
         obtenereUnidades(page,'','');
     };
     function addUnidad() {
-       obtenerpartidas(1, '', '');
+       obtenerPartidas();
        idpartida.value = 1; 
        mostrarModal.value = true;
        tituloModal.value = 'Nueva Unidad'; 
        nomunidad.value = '';
        sigla.value = '';
        estadomodal.value = 1; // Cambia a modo nuevo
+    };
+    const obtenerPartidas = async () => {
+        try {
+            const response = await axios.get('/partidas/todos');
+            partidas.value = response.data;
+        } catch (error) {
+            console.error('Error al obtener las partidas:', error);
+        }
     };
     function updateUnidad(unidad) {
         idpartida.value = unidad.idpartida;

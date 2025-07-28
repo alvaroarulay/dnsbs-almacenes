@@ -19,16 +19,16 @@ return new class extends Migration
             $table->string('sigla')->nullable();
             $table->timestamps();
         });
-        DB::table('ciudad')->insert(array('id'=>1,'nomciudad'=>'LA PAZ','sigla'=>'LPZ'));
-        DB::table('ciudad')->insert(array('id'=>2,'nomciudad'=>'EL ALTO','sigla'=>'EAL'));
-        DB::table('ciudad')->insert(array('id'=>3,'nomciudad'=>'COCHABAMBA','sigla'=>'CBBA'));
-        DB::table('ciudad')->insert(array('id'=>4,'nomciudad'=>'SANTA CRUZ','sigla'=>'SCZ'));
-        DB::table('ciudad')->insert(array('id'=>5,'nomciudad'=>'BENI','sigla'=>'BEN'));
-        DB::table('ciudad')->insert(array('id'=>6,'nomciudad'=>'PANDO','sigla'=>'PND'));
-        DB::table('ciudad')->insert(array('id'=>7,'nomciudad'=>'ORURO','sigla'=>'ORU'));
-        DB::table('ciudad')->insert(array('id'=>8,'nomciudad'=>'POTOSI','sigla'=>'PTS'));
-        DB::table('ciudad')->insert(array('id'=>9,'nomciudad'=>'CHUQUISACA','sigla'=>'CHU'));
-        DB::table('ciudad')->insert(array('id'=>10,'nomciudad'=>'TARIJA','sigla'=>'TJA'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'LA PAZ','sigla'=>'LPZ'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'EL ALTO','sigla'=>'EAL'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'COCHABAMBA','sigla'=>'CBBA'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'SANTA CRUZ','sigla'=>'SCZ'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'BENI','sigla'=>'BEN'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'PANDO','sigla'=>'PND'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'ORURO','sigla'=>'ORU'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'POTOSI','sigla'=>'PTS'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'CHUQUISACA','sigla'=>'CHU'));
+        DB::table('ciudad')->insert(array('nomciudad'=>'TARIJA','sigla'=>'TJA'));
     }
 
     /**

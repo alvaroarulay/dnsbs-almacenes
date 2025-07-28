@@ -50,7 +50,7 @@ class UnidadesController extends Controller
     {
         try {
              $this->validate($request, [
-                'nomunidad' => 'required|unique:unidades,nomunidad',
+                'nomunidad' => 'required',
                 'sigla' => 'nullable|max:10',
                 'idpartida' => 'required|exists:partidas,id'
             ]);

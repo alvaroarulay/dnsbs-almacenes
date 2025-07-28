@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
-            $table->integer('cantidad_utilizada');
+            $table->decimal('cantidad_utilizada', 10, 2);
             $table->decimal('precio_unitario', 10, 2); // precio histórico para trazabilidad
             $table->foreignId('id_salida')->constrained('salidas');
             $table->foreignId('id_entrada')->constrained('entradas');

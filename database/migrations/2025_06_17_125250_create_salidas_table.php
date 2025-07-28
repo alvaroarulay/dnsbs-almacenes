@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('salidas', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
-            $table->integer('cantidad');  
+            $table->decimal('cantidad', 10, 2);
             $table->integer('numero_anual');
             $table->integer('anio');
             $table->foreignId('id_articulo')->constrained('articulos');

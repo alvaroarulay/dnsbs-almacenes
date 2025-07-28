@@ -148,7 +148,6 @@ class EntradasController extends Controller
     }
     public function destroy($nro,$anio){
         try{
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             $entradas = Entradas::where('numero_anual','=',$nro)->where('anio','=',$anio)->get();
             foreach($entradas as $item){
                 $entrada = Entradas::findOrFail($item->id);
@@ -161,7 +160,6 @@ class EntradasController extends Controller
                 $factura = Facturas::findOrFail($idfactura->id);
                 $factura->delete();
             }
-             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
              return response()->json(['message' => 'Datos Guardados! '], 200);
         }catch(\Exception $e){
             return response()->json(['error' => 'Error al registrar la entrada: ' . $e->getMessage()], 500);
@@ -280,18 +278,18 @@ class EntradasController extends Controller
                                 ->join('almacen','articulos.id_almacen','=','almacen.id')
                                 ->join('establecimiento','almacen.id_establecimiento','=','establecimiento.id')
                                 ->join('ciudad','establecimiento.id_ciudad','=','ciudad.id')
-                ->select('partidas.nompartida',DB::raw('count(*) as valor'))
+                ->select('partidas.codigo','partidas.nompartida',DB::raw('sum(entradas.cantidad * entradas.precio_unitario) as total'),DB::raw('sum(entradas.cantidad) as valor'))
                 ->whereBetween(DB::raw('DATE(entradas.fecha)'), [$fechainicial, $fechafinal])
-                ->groupBy('partidas.nompartida'); 
+                ->groupBy('partidas.codigo', 'partidas.nompartida'); 
             }else{
                 $query = Salidas::join('articulos','articulos.id','=','salidas.id_articulo')
                                 ->join('partidas','articulos.id_partida','=','partidas.id')
                                 ->join('almacen','articulos.id_almacen','=','almacen.id')
                                 ->join('establecimiento','almacen.id_establecimiento','=','establecimiento.id')
                                 ->join('ciudad','establecimiento.id_ciudad','=','ciudad.id')
-                ->select('partidas.nompartida',DB::raw('count(*) as valor'))
+                ->select('partidas.codigo','partidas.nompartida',DB::raw('count(*) as valor'))
                 ->whereBetween(DB::raw('DATE(salidas.fecha)'), [$fechainicial, $fechafinal])
-                ->groupBy('partidas.nompartida'); 
+                ->groupBy('partidas.codigo'); 
             }
            
             if($ciudad==0){

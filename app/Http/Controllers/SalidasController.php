@@ -146,7 +146,6 @@ class SalidasController extends Controller
    public function destroy($nro, $anio)
     {
         try {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
             $salidas = Salidas::where('numero_anual', $nro)->where('anio', $anio)->get();
 
@@ -163,9 +162,6 @@ class SalidasController extends Controller
 
                 $item->delete();
             }
-
-            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
             return response()->json(['message' => 'Datos eliminados correctamente.'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al eliminar: ' . $e->getMessage()], 500);

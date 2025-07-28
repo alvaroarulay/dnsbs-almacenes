@@ -107,14 +107,44 @@
                         </button>
                     </div>
                     <div class="modal-body" v-if="grafico">
-                         <h3 class="tile-title">Partidas por Cantidad</h3>
-                        <div class="ratio ratio-16x9 d-flex d-flex justify-content-center align-items-center">
-                        <Bar
-                                id="bar-chart"
-                                :options="chartOptions"
-                                :data="chartData"
-                            />
+                        <div class="row mb-3">
+                            <h3 class="tile-title">Partidas por Cantidad</h3>
+                            <div class="col-md-6">
+                                <div class="ratio ratio-16x9 d-flex d-flex justify-content-center align-items-center">
+                                <Bar
+                                        id="bar-chart"
+                                        :options="chartOptions"
+                                        :data="chartData"
+                                    />
+                                </div> 
+                            </div>
+                            <div class="col-md-6 table-responsive">
+                                <table class="table table-sm table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Partida</th>
+                                            <th>Cantidad</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="total in array" :key="total.codigo">
+                                            <td>{{ total.codigo + '-' + total.nompartida }}</td>
+                                            <td style="text-align: right;">{{ format(total.valor) }}</td>
+                                            <td style="text-align: right;">{{ format(total.total)  }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><b>Totales:</b></td>
+                                            <td style="text-align: right;"><b>{{ format(totalvalor) }}</b></td>
+                                            <td style="text-align: right;"><b>{{ format(totalsum) }}</b></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
+                        
                     </div>
                     <div class="modal-body" v-else-if="!grafico">
                           <iframe
@@ -136,7 +166,7 @@
 </main>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -154,7 +184,9 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
 
     const etiquetas = ref([]);
     const valores = ref([]);
+    const total = ref([]);
     const grafico = ref(true);
+    const array = ref([]);
 
     const ciudadSeleccionada = ref(0);
     const ciudades =ref([]);
@@ -252,14 +284,18 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
         etiquetas.value=[];
         valores.value=[];
         chartData.value ={labels: [],datasets: [{ data: [] }]};
+        total.value=[];
+        valores.value=[];
+        array.value=[];
         pdf.value='';
     }
     const graficacompras = async () => {
         const totales = await axios.get(`/entradas/grafica?ciudad=${ciudadSeleccionada.value}&establecimiento=${estabSeleccionado.value}&almacen=${almacenSeleccionado.value}&partida=${partidas.value}&pedidos=${chcompraspedidos.value}&fechai=${fechai.value}&fechaf=${fechaf.value}`);
+        array.value = totales.data.estados;
         totales.data.estados.forEach(row => {
-            etiquetas.value.push(row.nompartida)
+            etiquetas.value.push(row.codigo)
             valores.value.push(row.valor)
-            
+            total.value.push(row.total)
         })
         chartData.value = {
         labels: etiquetas.value,
@@ -267,11 +303,70 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
         {
             label: 'Partida',
             data: valores.value,
-            backgroundColor: ['#0dcaf0', '#6610f2', '#fd7e14']
+            backgroundColor: [
+                        'rgba(0, 128, 255, 0.6)',     // azul eléctrico
+                        'rgba(255, 0, 128, 0.6)',     // fucsia
+                        'rgba(128, 255, 0, 0.6)',     // verde neón
+                        'rgba(255, 128, 0, 0.6)',     // naranja fuerte
+                        'rgba(128, 0, 255, 0.6)',     // púrpura intenso
+                        'rgba(0, 255, 128, 0.6)',     // verde menta
+                        'rgba(255, 0, 0, 0.6)',       // rojo puro
+                        'rgba(0, 255, 255, 0.6)',     // cian
+                        'rgba(128, 128, 128, 0.6)',   // gris medio
+                        'rgba(255, 255, 0, 0.6)',     // amarillo puro
+                        'rgba(0, 0, 255, 0.6)',       // azul puro
+                        'rgba(128, 0, 0, 0.6)',       // rojo oscuro
+                        'rgba(0, 128, 0, 0.6)',       // verde oscuro
+                        'rgba(0, 0, 128, 0.6)',       // azul oscuro
+                        'rgba(128, 128, 0, 0.6)',     // oliva
+                        'rgba(128, 0, 128, 0.6)',     // púrpura clásico
+                        'rgba(0, 128, 128, 0.6)',     // verde azulado
+                        'rgba(192, 192, 192, 0.6)',   // gris claro metálico
+                        'rgba(255, 215, 0, 0.6)'      // dorado
+                    ]
+                },
+                {
+            label: 'Total',
+            data: total.value,
+            backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',   // rojo
+                    'rgba(54, 162, 235, 0.6)',   // azul
+                    'rgba(255, 206, 86, 0.6)',   // amarillo
+                    'rgba(75, 192, 192, 0.6)',   // verde agua
+                    'rgba(153, 102, 255, 0.6)',  // violeta
+                    'rgba(255, 159, 64, 0.6)',   // naranja
+                    'rgba(199, 199, 199, 0.6)',  // gris claro
+                    'rgba(83, 102, 255, 0.6)',   // azul violeta
+                    'rgba(255, 102, 255, 0.6)',  // rosa
+                    'rgba(0, 204, 102, 0.6)',    // verde
+                    'rgba(255, 51, 51, 0.6)',    // rojo fuerte
+                    'rgba(102, 255, 204, 0.6)',  // turquesa
+                    'rgba(255, 255, 102, 0.6)',  // amarillo claro
+                    'rgba(102, 102, 255, 0.6)',  // azul medio
+                    'rgba(255, 153, 204, 0.6)',  // rosa claro
+                    'rgba(204, 255, 153, 0.6)',  // verde lima
+                    'rgba(255, 204, 153, 0.6)',  // durazno
+                    'rgba(204, 204, 255, 0.6)',  // lavanda
+                    'rgba(255, 255, 255, 0.6)'   // blanco translúcido
+                    ]
         }
         ]
         }
     }
+   const totalsum = computed(() =>
+    array.value.reduce((sum, item) => sum + Number(item.total), 0)
+    );
+
+    const totalvalor = computed(() =>
+    array.value.reduce((sum, item) => sum + Number(item.valor), 0)
+    );
+
+    const format = (value) => {
+    return new Intl.NumberFormat('es-BO', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+    };
     function pdfcompras(){
         modalgraficoc.value= true;
         grafico.value=false;

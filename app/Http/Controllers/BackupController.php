@@ -94,8 +94,6 @@ class BackupController extends Controller
 
             return response()->json(['success' => "Tabla `$tabla` restaurada exitosamente."]);
         } catch (\Exception $e) {
-            // Activar llaves foráneas por si ocurre error antes
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
             return response()->json(['error' => 'Error al ejecutar SQL: ' . $e->getMessage()], 500);
         }

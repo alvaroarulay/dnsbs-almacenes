@@ -7,6 +7,13 @@
                         <h3>Respaldo de la Base de Datos SQL</h3>
                     </div>
                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                   <p>Sube un archivo SQL</p>
+                                    <input type="file" name="archivo_sql" accept=".sql" class="form-control" @change="handleArchivo">
+                                </div>
+                                <div class="col-md-6"></div>
+                            </div>
                             <div class="tile-body table-responsive table-fixed">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -21,6 +28,9 @@
                                             <td>
                                                 <button type="button" @click="restaurar(base.id)" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Editar">
                                                 <i class="bi bi-check-all"></i>
+                                                </button>
+                                                 <button type="button" @click="eliminar(base.id)" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Eliminar">
+                                                <i class="bi bi-trash"></i>
                                                 </button>
                                             </td>
                                             <td v-text="base.archivo"></td>
@@ -72,6 +82,8 @@ export default {
           'to' : 0,
       },
       offset : 3,
+        cargando: false,
+        archivo: null,
     }
   },
    computed:{
@@ -116,14 +128,14 @@ export default {
             console.log(error);
         });
     },
-      cambiarPagina(page,buscar,criterio){
+    cambiarPagina(page,buscar,criterio){
         let me = this;
         //Actualiza la página actual
         me.pagination.current_page = page;
         //Envia la petición para visualizar la data de esa página
         me.Obtenerbase(page,buscar,criterio);
     },
-      async restaurar(id){
+    async restaurar(id){
       try {
             const result = await Swal.fire({
                 title: '¿Estás seguro?',
@@ -156,7 +168,27 @@ export default {
     },
     viafzip(){
         window.open('/download-sql');
-    }
+        this.Obtenerbase(1,'','');
+    },
+    handleArchivo(event) {
+        this.cargando = false;
+        const file = event.target.files[0];
+        if (file) {
+            const nombre = file.name.toLowerCase();
+            const extensionValida = nombre.endsWith('.sql');
+
+            if (extensionValida) {
+            this.archivo = file;
+            } else {
+            this.archivo = null;
+            swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Solo se permiten archivos con extensión .sql',
+            });
+            }
+        }
+    },
   },
   mounted() {
     this.Obtenerbase(1,'','');

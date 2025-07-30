@@ -497,7 +497,64 @@ DB::table('personal')->insert(array('codper'=>'FUN-762','nomper'=>'CLAUDIA MAYTE
 DB::table('personal')->insert(array('codper'=>'FUN-763','nomper'=>'JOSE LUIS LECLERE LANDIVARº','ciper'=>'3601304','telper'=>'4256946','emailper'=>'','dirper'=>'La Paz','id_almacen'=>1));
 DB::table('personal')->insert(array('codper'=>'FUN-764','nomper'=>'FABIOLA MARY MAMANI LAURA','ciper'=>'7081972','telper'=>'1111111111','emailper'=>'','dirper'=>'La Paz','id_almacen'=>1));
 DB::table('personal')->insert(array('codper'=>'FUN-800','nomper'=>'Juan Felix Suxo Gutiérrez','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>1));
-    }
+
+DB::table('personal')->insert(array('codper'=>'FUN-801','nomper'=>'Adelio Ramirez','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>1));
+DB::table('personal')->insert(array('codper'=>'FUN-802','nomper'=>'Responsable Secretaria General','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>13));
+DB::table('personal')->insert(array('codper'=>'FUN-803','nomper'=>'Responsable Archivo Central ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>14));
+DB::table('personal')->insert(array('codper'=>'FUN-804','nomper'=>'Responsable Asesoria Juridica','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>15));
+DB::table('personal')->insert(array('codper'=>'FUN-805','nomper'=>'Responsable Relaciones Publicas','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>16));
+
+DB::table('personal')->insert(array('codper'=>'FUN-806','nomper'=>'Responsable Of. Nal. de personal','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>17));
+DB::table('personal')->insert(array('codper'=>'FUN-807','nomper'=>'Responsable Of. Nal. de PP. OO.','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>18));
+DB::table('personal')->insert(array('codper'=>'FUN-808','nomper'=>'Responsable Of. Nal. de Salud ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>19));
+DB::table('personal')->insert(array('codper'=>'FUN-809','nomper'=>'Responsable Of. Nal. de Bienestar Social','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>20));
+DB::table('personal')->insert(array('codper'=>'FUN-810','nomper'=>'Responsable Of. Nal. de Psicologia','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>21));
+
+DB::table('personal')->insert(array('codper'=>'FUN-811','nomper'=>'Responsable Div. de Sistemas','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>22));
+DB::table('personal')->insert(array('codper'=>'FUN-812','nomper'=>'Responsable Secretaria Administrativa','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>23));
+DB::table('personal')->insert(array('codper'=>'FUN-813','nomper'=>'Responsable Div. de Contabilidad ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>24));
+DB::table('personal')->insert(array('codper'=>'FUN-814','nomper'=>'Responsable Div. Tesoreria','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>25));
+DB::table('personal')->insert(array('codper'=>'FUN-815','nomper'=>'Responsable Aux. Tesoreria','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>26));
+DB::table('personal')->insert(array('codper'=>'FUN-816','nomper'=>'Responsable Sección de Egresos','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>27));
+
+DB::table('personal')->insert(array('codper'=>'FUN-817','nomper'=>'Responsable Sección de Creditos','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>28));
+DB::table('personal')->insert(array('codper'=>'FUN-818','nomper'=>'Responsable Caja Chica','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>29));
+DB::table('personal')->insert(array('codper'=>'FUN-819','nomper'=>'Responsable Sección Ingresos ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>30));
+DB::table('personal')->insert(array('codper'=>'FUN-820','nomper'=>'Responsable Sección Pasajes y Viaticos','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>31));
+DB::table('personal')->insert(array('codper'=>'FUN-821','nomper'=>'Responsable Brigadas Moviles','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>32));
+
+DB::table('personal')->insert(array('codper'=>'FUN-822','nomper'=>'Responsable Div. Presupuestos','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>33));
+DB::table('personal')->insert(array('codper'=>'FUN-823','nomper'=>'Responsable Aux. Administrativo 1','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>34));
+DB::table('personal')->insert(array('codper'=>'FUN-824','nomper'=>'Responsable Aux. Administrativo 2 ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>35));
+DB::table('personal')->insert(array('codper'=>'FUN-825','nomper'=>'Responsable Div. Adquisiciones','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>36));
+DB::table('personal')->insert(array('codper'=>'FUN-826','nomper'=>'Responsable Sección Almacen Central','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>37));
+
+DB::table('personal')->insert(array('codper'=>'FUN-827','nomper'=>'Responsable de Activos Fijos','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>38));
+DB::table('personal')->insert(array('codper'=>'FUN-828','nomper'=>'Responsable Div. de Impuestos','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>39));
+DB::table('personal')->insert(array('codper'=>'FUN-829','nomper'=>'Responsable de Seguridad ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>40));
+DB::table('personal')->insert(array('codper'=>'FUN-830','nomper'=>'Responsable de Cocina','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>41));
+DB::table('personal')->insert(array('codper'=>'FUN-831','nomper'=>'Responsable de Limpieza','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>42));
+
+DB::table('personal')->insert(array('codper'=>'FUN-832','nomper'=>'Responsable Almacen El Alto','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>8));
+DB::table('personal')->insert(array('codper'=>'FUN-833','nomper'=>'Responsable Almacen Oruro','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>9));
+DB::table('personal')->insert(array('codper'=>'FUN-834','nomper'=>'Responsable Almacen Potosí','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>11));
+DB::table('personal')->insert(array('codper'=>'FUN-835','nomper'=>'Responsable Almacen Pando','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>10));
+DB::table('personal')->insert(array('codper'=>'FUN-836','nomper'=>'Responsable Almacen Beni','ciper'=>'3130436','telper'=>'4256950','emailper'=>'Torres@latinmait.com','dirper'=>'C/ N. Aguirre nº 664','id_almacen'=>6));
+DB::table('personal')->insert(array('codper'=>'FUN-837','nomper'=>'Responsable Almacen Santa Cruz','ciper'=>'3130432','telper'=>'4256946','emailper'=>'Vargas@latinmait.com','dirper'=>'C/ N. Aguirre nº 660','id_almacen'=>5));
+DB::table('personal')->insert(array('codper'=>'FUN-838','nomper'=>'Responsable Almacen Cochabamba ','ciper'=>'3130433','telper'=>'4256947','emailper'=>'Perez@latinmait.com','dirper'=>'C/ N. Aguirre nº 661','id_almacen'=>3));
+DB::table('personal')->insert(array('codper'=>'FUN-839','nomper'=>'Responsable Almacen Tarija ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>10));
+
+DB::table('personal')->insert(array('codper'=>'FUN-840','nomper'=>'Responsable Almacen Chuquisaca','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>7));
+
+
+
+
+
+
+
+
+
+}
 
     /**
      * Reverse the migrations.

@@ -141,7 +141,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
         Route::get('/backup','BackupController@index');
         Route::get('/download-sql', 'BackupController@store');
-        Route::get('/procesar-sql','BackupController@procesar');
+        Route::get('/procesar-sql/{id}','BackupController@procesar');
         });
     });
 

@@ -33,7 +33,7 @@ class BackupController extends Controller
         ];
     }
     public function store(Request $request){
-        $backupPath = storage_path('app/backups');
+        $backupPath = storage_path('app/backups/');
         if (!file_exists($backupPath)) {
             mkdir($backupPath, 0755, true);
         }
@@ -43,8 +43,7 @@ class BackupController extends Controller
             $username = env('DB_USERNAME');
             $password = env('DB_PASSWORD');
             $host = env('DB_HOST');
-            $backupPath = storage_path('app/backups');
-            $fileName = $date->format('Ymd') . '.sql';
+            $fileName = $date . '.sql';
             $command = "PGPASSWORD='{$password}' pg_dump --username={$username} --host={$host} --dbname={$database} --format=plain --file={$backupPath}/{$fileName}";
             exec($command); 
             $backup = new Backup();
@@ -59,45 +58,45 @@ class BackupController extends Controller
             }
     }
     public function procesar($id){
-        $base = Backup::where('id', $id)->first();
+       $base = Backup::where('id', $id)->first();
 
-        if (!$base || !$base->archivo) {
-            return response()->json(['error' => 'Archivo no encontrado en base de datos.'], 404);
+        if (!$base) {
+            return response()->json(['error' => 'Backup no encontrado'], 404);
         }
 
-        $ruta = storage_path("app/backups/" . $base->archivo);
+        $backupPath = storage_path('app/backups/' . $base->archivo);
 
-        if (!file_exists($ruta)) {
-            return response()->json(['error' => 'Archivo no existe en el sistema.'], 404);
-        }
-
-        $tabla = 'entradas'; // Puedes hacerlo dinámico si lo deseas
-
-        $contenido = file_get_contents($ruta);
-
-        $bloques = preg_split('/(?=^CREATE TABLE|^INSERT INTO)/m', $contenido);
-
-        $bloquesFiltrados = collect($bloques)->filter(function ($bloque) use ($tabla) {
-            return str_starts_with(trim($bloque), "INSERT INTO") && str_contains($bloque, "`$tabla`");
-        })->implode("\n");
-
-        if (empty($bloquesFiltrados)) {
-            return response()->json(['error' => "No se encontraron datos para la tabla `$tabla`."]);
+        if (!file_exists($backupPath)) {
+            return response()->json(['error' => 'Archivo de backup no encontrado'], 404);
         }
 
         try {
-            // Vaciar la tabla
-            DB::statement("TRUNCATE TABLE `$tabla`");
+            $database = env('DB_DATABASE');
+            $username = env('DB_USERNAME');
+            $password = env('DB_PASSWORD');
+            $host     = env('DB_HOST');
 
-            // Insertar los datos filtrados
-            DB::unprepared($bloquesFiltrados);
+            // Escapar ruta y parámetros
+            $escapedPath = escapeshellarg($backupPath);
+            $escapedUser = escapeshellarg($username);
+            $escapedDb   = escapeshellarg($database);
+            $escapedHost = escapeshellarg($host);
+            $escapedPass = escapeshellarg($password);
 
-            return response()->json(['success' => "Tabla `$tabla` restaurada exitosamente."]);
+            // Construir comando
+            $command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -d {$escapedDb} -f {$escapedPath}";
+
+            exec($command, $output, $return_var);
+
+            if ($return_var !== 0) {
+                return response()->json(['error' => 'Error al restaurar: ' . implode("\n", $output)], 500);
+            }
+
+            return response()->json(['success' => 'Backup restaurado exitosamente.']);
         } catch (\Exception $e) {
-
-            return response()->json(['error' => 'Error al ejecutar SQL: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al restaurar: ' . $e->getMessage()], 500);
         }
-    
+
     }
- }
+}
 

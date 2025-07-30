@@ -32,7 +32,14 @@ return new class extends Migration
         DB::table('establecimiento')->insert(array('nomestab'=>'HOSPITAL POLICIAL N2 CBBA','direccion'=>'','telefono'=>'','id_ciudad'=>3));
         DB::table('establecimiento')->insert(array('nomestab'=>'POLICONSULTORIO TARIJA','direccion'=>'','telefono'=>'','id_ciudad'=>10));
         DB::table('establecimiento')->insert(array('nomestab'=>'POLICONSULTORIO CHUQUISACA','direccion'=>'','telefono'=>'','id_ciudad'=>9));
-    }
+        
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. PERSONAL','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. PP. OO.','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. SALUD','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. DE BIENESTAR SOCIAL','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. PSICOLOGIA','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DIV. SISTEMAS','direccion'=>'','telefono'=>'','id_ciudad'=>1));
+        DB::table('establecimiento')->insert(array('nomestab'=>'DPTO. NAL. ADMINISTRATIVA','direccion'=>'','telefono'=>'','id_ciudad'=>1));}
 
     /**
      * Reverse the migrations.

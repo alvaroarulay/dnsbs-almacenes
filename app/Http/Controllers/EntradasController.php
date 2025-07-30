@@ -287,9 +287,11 @@ class EntradasController extends Controller
                                 ->join('almacen','articulos.id_almacen','=','almacen.id')
                                 ->join('establecimiento','almacen.id_establecimiento','=','establecimiento.id')
                                 ->join('ciudad','establecimiento.id_ciudad','=','ciudad.id')
-                ->select('partidas.codigo','partidas.nompartida',DB::raw('count(*) as valor'))
+                                ->join('movimientos','movimientos.id_salida','=','salidas.id')
+                                ->join('entradas','movimientos.id_entrada','=','entradas.id')
+                ->select('partidas.codigo','partidas.nompartida',DB::raw('sum(salidas.cantidad * entradas.precio_unitario) as total'),DB::raw('sum(salidas.cantidad) as valor'))
                 ->whereBetween(DB::raw('DATE(salidas.fecha)'), [$fechainicial, $fechafinal])
-                ->groupBy('partidas.codigo'); 
+                ->groupBy('partidas.codigo', 'partidas.nompartida');
             }
            
             if($ciudad==0){

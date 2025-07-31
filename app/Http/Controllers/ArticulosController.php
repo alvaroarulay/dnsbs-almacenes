@@ -22,7 +22,8 @@ class ArticulosController extends Controller
         $query = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
-            ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',
+                            ->join('entradas', 'articulos.id', '=', 'entradas.id_articulo')
+            ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre','entradas.restante as stock',
                     'almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
             ->where('almacen.seleccionado','=',1);
         

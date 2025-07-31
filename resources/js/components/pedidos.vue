@@ -107,20 +107,27 @@
                         </div>
                     </div>
                      <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="articulos" class="form-label">Unidad de Medida</label>
                           <div class="input-group">
                             <span class="input-group-text" id="unidad"><i class="bi bi-rulers"></i></span>
                             <input type="text" class="form-control" aria-describedby="unidad" v-model="unidad" disabled>
                           </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                           <label for="" class="form-label">Stock</label>
                           <div class="input-group">
                             <span class="input-group-text" id="stock"><i class="bi bi-hash"></i></span>
                             <input type="text" class="form-control" aria-describedby="stock" v-model="stock" disabled>
                           </div>
                         </div>
+                         <div class="col-md-4">
+                            <label for="" class="form-label">Cantidad</label>
+                            <div class="input-group">
+                            <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
+                            <input type="number" required class="form-control" aria-describedby="cantidad" v-model="cantidad"  @keyup.enter="agregarProducto">
+                        </div>
+                    </div>
                     </div>
 
                  
@@ -144,13 +151,7 @@
               
                 <div class="card-header text-bg-info mb-3">Pedido</div>
                 <div class="card-body text-primary">
-                     <div class="row mb-3">
-                        <label for="" class="form-label">Cantidad</label>
-                        <div class="input-group">
-                        <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
-                        <input type="number" required class="form-control" aria-describedby="cantidad" v-model="cantidad"  >
-                        </div>
-                    </div>
+                    
                     <div class="row mb-3">
                         <div class="col-md-6">
                           <label for="person" class="form-label">Personal</label>
@@ -315,6 +316,7 @@
                                         <th>Seleccionar</th>
                                         <th>Código</th>
                                         <th>Descripción</th>
+                                        <th>Stock</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -326,6 +328,17 @@
                                         </td>
                                         <td v-text="activo.codigo"></td>
                                         <td v-text="activo.descripcion"></td>
+                                        <td >
+                                            <div class="bs-component" v-if="activo.stock==0">
+                                                <span class="me-1 badge badge-pill bg-danger">{{activo.stock}}</span>
+                                            </div>
+                                            <div class="bs-component" v-else-if="activo.stock>0 && activo.stock<50">
+                                                <span class="me-1 badge badge-pill bg-warning">{{activo.stock}}</span>
+                                            </div>
+                                            <div class="bs-component" v-else>
+                                                <span class="me-1 badge badge-pill bg-success">{{activo.stock}}</span>  
+                                            </div>
+                                        </td>
                                     </tr>                                
                                 </tbody>
                             </table>
@@ -494,18 +507,35 @@ import axios from 'axios';
                 stock.value = response.data.stock;
             } else {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Artículo no encontrado',
-                });
+                    position: "top-end",
+                    icon: "error",
+                    title: "Articulo no encontrado",
+                    showConfirmButton: false,
+                    timer: 1500
+                 });
+                idarticulo.value = 0;
+                codigoArticulo.value = '';
+                descripcionArticulo.value = '';
+                unidad.value = '';
+                stock.value = 0;
+                cantidad.value = '';
             }
         } catch (error) {
-            Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Artículo no encontrado',})
-            limpiarCampos();        }
+           Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Articulo no encontrado",
+                    showConfirmButton: false,
+                    timer: 1500
+                 });
+                idarticulo.value = 0;
+                codigoArticulo.value = '';
+                descripcionArticulo.value = '';
+                unidad.value = '';
+                stock.value = 0;
+                cantidad.value = '';
     };
+    }
     function agregarActivo(data=[]){
         inputArticulo(data.codigo);
         buscar.value='';
@@ -563,6 +593,7 @@ import axios from 'axios';
                     icon: 'error',
                     title: 'Error',
                     text: 'Artículo no encontrado',
+
                 });
             }
         } catch (error) {

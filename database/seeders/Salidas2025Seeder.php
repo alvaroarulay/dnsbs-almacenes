@@ -1903,7 +1903,7 @@ class Salidas2025Seeder extends Seeder
             $salida->save();
 
             $entradas = Entradas::where('id_articulo', $pedido['id_articulo'])
-                ->where('restante', '>', 0)
+                ->where('restante', '>', 0)->where('anio', 2025)
                 ->orderBy('fecha', 'asc')
                 ->get();
 

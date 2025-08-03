@@ -9,7 +9,21 @@
             <h3 class="tile-title">Notas de Pedido</h3>
             <div class="row mb-3">
                 <div class="col-md-4 col-md-offset-3 justify-content-start">
-                    <button class="btn btn-danger" @click="verpdf"><i class="bi bi-file-earmark-pdf"></i>Ver Pdf</button>
+                     <div class="row">
+                        <div class="col-md-4">
+                            <label for="form-label">Gestión</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="" id="" class="form-select" v-model="gestionSeleccionada" @change="onChangeGestion($event)">
+                                <option v-for="gestion in gestiones" :key="gestion.gestion" :value="gestion.gestion">
+                                    {{ gestion.gestion }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                             <button class="btn btn-danger" @click="verpdf"><i class="bi bi-file-earmark-pdf"></i>Ver Pdf</button>
+                        </div>
+                    </div> 
                 </div>
                 <div class="text-end col-md-8">
                     <div class="input-group mb-3">
@@ -32,6 +46,8 @@
                             <th>Gestión</th>
                             <th>Fecha de Nota</th>
                             <th>Fecha de Creación</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
                             <th>Personal Vinculado</th> 
                             <th>Opciones</th>  
                         </tr>
@@ -41,6 +57,8 @@
                             <td>{{ salida.numero_anual }}</td>
                             <td>{{ salida.anio }}</td>
                             <td>{{ new Date(salida.fecha).toLocaleDateString() }}</td>
+                            <td style="text-align: right;">{{ format(salida.cantidad) }}</td>
+                            <td style="text-align: right;">{{ format(salida.total) }}</td>
                             <td>{{ new Date(salida.created_at).toLocaleDateString() }}</td>
                             <td>{{ salida.nomper }}</td>
                             <td class="text-center">
@@ -100,6 +118,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import axios from 'axios';
+    const gestiones = ref([]);
+    const gestionSeleccionada = ref(0);
     const tituloAlmacen= ref('');
     const salidas = ref([]);
     const buscar = ref('');
@@ -136,6 +156,19 @@ import axios from 'axios';
         }
         return pages
         });
+    const obtenerGestiones = async () => {
+        if (gestionSeleccionada.value == 0) {
+            const fechaActual = new Date();
+            gestionSeleccionada.value = fechaActual.getFullYear();
+        }
+        try {
+            const response = await axios.get('/gestiones');
+            gestiones.value = response.data;
+            gestionSeleccionada.value = response.data[0].gestion || 0;
+        } catch (error) {
+            console.error('Error al obtener las gestiones:', error);
+        }
+    };
     const obtenertitulo = async () => {
         try {
             const response = await axios.get('/almacen/titulo');
@@ -146,7 +179,7 @@ import axios from 'axios';
     };
     const obtenerNotasSalida = async (page,buscar,criterio) => {
         try {
-            const response = await axios.get('/salidas/notas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio);
+            const response = await axios.get('/salidas/notas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio+'&anio=' + gestionSeleccionada.value);
             salidas.value = response.data.salidas.data;
             Object.assign(pagination, response.data.pagination)
         } catch (error) {
@@ -188,40 +221,18 @@ import axios from 'axios';
         if (page === pagination.current_page) return
         obtenerNotasSalida(page,'','');
     };
-    function changePageBusqueda(page){
-        if (selectbusqueda.value==0){
-            if (page === pagination.current_page) return
-            listarArticulo(page,'','');
-        }else{
-            if(selectbusqueda.value==1){
-                if (page === pagination.current_page) return
-                listarProvedor(page,'','');
-            }else{
-                if(selectbusqueda.value==2){
-                    if (page === pagination.current_page) return
-                    listarPersonal(page,'','');
-                }
-            }
-        }
-    };
     function verpdf() {
         modalpdf.value = true;
-        pdf.value = '/salidas/pdf';
+         pdf.value = `/salidas/pdf?gestion=${gestionSeleccionada.value}`;
     };
-    function updatenotasalida(data=[]){
-        modaledit.value=true;
-        obtenerActivos(data.numero_anual,data.anio);
-    };
-    const obtenerActivos =async(nro,anio)=>{
-        try{
-            const response = await axios.get(`/salidas/items?nro=${nro}&anio=${anio}`);
-            arrayActivos.value = response.data.articulos.data;
-            Object.assign(pagination, response.data.pagination);
-        } catch(e) {
-            console.log(e)
+    function onChangeGestion(e){
+        gestionSeleccionada.value = e.target.value;
+        if (gestionSeleccionada.value != 0) {
+            obtenerNotasSalida(1, '', '');
+        } else {
+            entradas.value = [];
         }
-
-    };
+    }
      const deletenosalida = async (nro,anio) => {
         try {
             const result = await Swal.fire({
@@ -254,9 +265,11 @@ import axios from 'axios';
             });
         }
     }
-    function cerrarModal(){
-        modaledit.value=false;
-        limpiarCampos();
+    const format = (value) => {
+    return new Intl.NumberFormat('es-BO', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
     };
     function limpiarCampos() {
         
@@ -266,6 +279,7 @@ import axios from 'axios';
         pdf.value = '/salidas/salidapdf/'+ data.fecha+ '/' + data.anio + '/' + data.numero_anual;
     };
     onMounted(() => {
+        obtenerGestiones();
         obtenertitulo();
         obtenerNotasSalida(1,'','');
 });

@@ -32,9 +32,6 @@
 		background-color: #ddd;
 		color: black;
 	}
-	#customers tfoot tr{
-		border: 1px solid #ddd;
-	}
 	.eslogan{
 		font-size: xx-small;
 		font-style: italic;
@@ -88,7 +85,8 @@
                     <td>
                         <div style="width: 9.59cm; height: 1.5cm;">
                             <p style="margin: 0.1cm; text-align: center; padding: 0" ><b>{{$titulo}}</b></p>
-                            <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">{{$fechaTitulo}}</p>
+							<p style="margin: 0.1cm; text-align: center; padding: 0; font-size: x-small" ><b>{{$subtitulo}}</b></p>
+                            <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">Expresado en BOLIVIANOS (Bs.)</p>
                         </div>
                     </td>
                     <td>
@@ -130,35 +128,68 @@
 				</td>
 			</tr>
         </table>
-          @foreach ($datosAgrupados as $grupo)
-    <h5>Nota: {{ $grupo['numero_anual'] }}</h5>
-    <table id="customers" style="width: 100%; margin-top: 0.2cm;">
-        <thead>
-            <tr style="border: 1px solid ;">
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Precio U.</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($grupo['items'] as $item)
-                <tr>
-                    <td>{{ $item->codigo }}</td>
-                    <td>{{ $item->descripcion }}</td>
-                    <td style="text-align: right;">{{ $item->cantidad }}</td>
-                    <td style="text-align: right;">{{ number_format($item->precio_unitario, 2) }}</td>
-                    <td style="text-align: right;">{{ number_format($item->cantidad * $item->precio_unitario, 2) }}</td>
+       <table id="customers">
+            <thead>
+                <tr style="border: 1px solid ;">
+                    <th style="width: 1cm; text-align:center">NRO.</th>
+                    <th style="width: 4cm; text-align:center">CÓDIGO</th>
+                    <th style="width: 7.5cm; text-align:center">DESCRIPCIÓN</th>
+					<th style="width: 2cm; text-align:center">CANTIDAD</th>
+					<th style="width: 2cm; text-align:center">PRECIO UNITARIO</th>
+					<th style="width: 2cm; text-align:center">TOTAL</th>
                 </tr>
+            </thead>
+            <tbody>
+            @foreach ($datos as $dato)
+                    <tr>
+                        <td style="text-align:center">{{$loop->iteration}}</td>
+                        <td style="text-align:center">{{$dato->codigo}}</td>
+                        <td>{{$dato->descripcion}}</td>
+						<td style="text-align:right">{{$dato->cantidad}}</td>
+						<td style="text-align:right">{{number_format($dato->precio_unitario, 2, ',', '.')}}</td>	
+						<td style="text-align:right"><b>{{ number_format($dato->cantidad * $dato->precio_unitario, 2, ',', '.')}}</b></td>
+                    </tr>
             @endforeach
-            <tr>
-                <td colspan="4"><strong>Subtotal</strong></td>
-                <td style="text-align: right;"><strong>{{ number_format($grupo['subtotal'], 2) }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
-@endforeach
+            </tbody>
+            <tfoot>
+				<tr >
+					<td style="font-size: x-small; text-align: right;" colspan="6" >Cantidad: {{$datos->count()}}</td>
+				</tr>
+				<tr >
+					<td style="font-size: x-small; text-align: right;" colspan="6" >Total: {{number_format($total, 2, ',', '.')}} Bs. </td>
+				</tr>
+			</tfoot>
+        </table>
+		<hr>
+		@if($factura->count()!=0)
+		<h5>Datos de la factura</h5>
+		<table id='customers'>
+			<thead>
+                <tr style="border: 1px solid ;">
+                    <th style="width: 2cm; text-align:center">Fecha</th>
+                    <th style="width: 3.5cm; text-align:center">Razon Social</th>
+                    <th style="width: 2cm; text-align:center">NIT</th>
+					<th style="width: 3cm; text-align:center">Cod. de Autorización</th>
+					<th style="width: 3cm; text-align:center">Cod. de Control</th>
+					<th style="width: 2cm; text-align:center">Nro. de Factura</th>
+					<th style="width: 3cm; text-align:center">Importe de Factura</th>
+                </tr>
+            </thead>
+			<tbody>
+            @foreach ($factura as $f)
+                    <tr>
+                        <td style="text-align:center">{{$f->fecha}}</td>
+                        <td style="text-align:center">{{$f->razon}}</td>
+						<td style="text-align:center">{{$f->nit}}</td>
+						<td style="text-align:center">{{$f->codautorizacion}}</td>
+						<td style="text-align:center">{{$f->codcontrol}}</td>
+						<td style="text-align:center">{{$f->nro}}</td>
+						<td style="text-align:right">{{number_format($f->monto, 2, ',', '.')}} Bs.</td>	
+                    </tr>
+            @endforeach
+            </tbody>
+		</table>
+		@endif
     </main>
 <footer>
     <div style="width: 17.59cm; height: 2cm; text-align: center;">

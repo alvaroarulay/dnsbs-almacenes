@@ -128,6 +128,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/entradas/items','EntradasController@items');
         Route::get('/entradas/grafica','EntradasController@grafica');
         Route::get('/entradas/pdftotal','EntradasController@pdftotal');
+        Route::get('/gestiones','EntradasController@gestiones');
+        Route::get('/resumengestion','EntradasController@resumengestion');
 
         Route::get('/salidas','SalidasController@index');
         Route::get('/salidas/notas','SalidasController@notas');
@@ -138,6 +140,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/salidas/codigo','SalidasController@codigoper');
         Route::get('/salidas/salidapdf/{fecha}/{anio}/{numeroanual}','SalidasController@pdfsalida');
         Route::get('/salidas/items','SalidasController@items');
+        Route::get('/exportar-reporte','SalidasController@exportarReporte');
 
         Route::get('/backup','BackupController@index');
         Route::get('/download-sql', 'BackupController@store');

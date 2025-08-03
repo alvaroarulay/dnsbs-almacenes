@@ -46,6 +46,7 @@ class ArticulosController extends Controller
        
     }
     public function buscar($cod){
+        $anio = now()->year();
         try{
             $articulo = Articulos::join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
             ->select('articulos.*','unidades.nomunidad as unidad_nombre')
@@ -53,7 +54,7 @@ class ArticulosController extends Controller
             if($articulo->count()==0){
                 return response()->json(['message'=>'No se encontro Articulo']); 
             }
-            $stock = Entradas::select('restante')->where('id_articulo','=',$articulo[0]->id)->sum('restante');
+            $stock = Entradas::select('restante')->where('id_articulo','=',$articulo[0]->id)->where('anio','=',$anio)->sum('restante');
             return response()->json(['articulo'=>$articulo,'stock'=>$stock]);  
         }catch(Exception $e){
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);

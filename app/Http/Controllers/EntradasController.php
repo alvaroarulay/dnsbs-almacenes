@@ -51,15 +51,23 @@ class EntradasController extends Controller
                 ->join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
                 ->join('almacen','articulos.id_almacen','=','almacen.id')
                 ->join('personal','entradas.id_personal','=','personal.id')
-                ->select('entradas.numero_anual','entradas.anio','entradas.fecha','entradas.created_at','personal.nomper','provedores.nompro')
-                ->where('almacen.seleccionado','=',1)
+                ->select('entradas.numero_anual',
+                'entradas.anio',
+                'entradas.fecha',
+                'entradas.created_at',
+                'personal.nomper',
+                'provedores.nompro',
+                DB::raw('sum(entradas.cantidad) as cantidad'),
+                DB::raw('sum(entradas.cantidad * entradas.precio_unitario) as total'),
+                )->where('anio','=',$request->anio)
+                ->where('saldo_inicial','=',false)
                 ->groupBy('personal.nomper')
                 ->groupBy('provedores.nompro')
                 ->groupBy('entradas.fecha')
                 ->groupBy('entradas.anio')
                 ->groupBy('entradas.created_at')
                 ->groupBy('entradas.numero_anual')
-                ->orderBy('entradas.created_at','desc');
+                ->orderBy('entradas.numero_anual','asc');
         if ($buscar=='') {
             $entradas = $query->paginate(10);
         } else {
@@ -200,7 +208,7 @@ class EntradasController extends Controller
 
         $total = array_sum($resultados);
         
-        $pdf=Pdf::loadView('plantillapdf.reporteentradas',[
+        $pdf=Pdf::loadView('plantillapdf.reporteentrada',[
                 'datos'=>$datos,
                 'titulo'=>$titulo,
                 'fechaTitulo'=>$fechaTitulo,
@@ -215,43 +223,55 @@ class EntradasController extends Controller
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
         }
-    public function pdfEntradas(){
+    public function pdfEntradas(Request $request){
         Date::setLocale('es');
         $fechaTitulo = Date::now()->format(' j \\de F \\de Y');
         $fechDerecha = Date::now()->format('d/M/Y');
-        $datos = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
-            ->join('almacen','articulos.id_almacen','=','almacen.id')
-            ->join('personal', 'entradas.id_personal', '=', 'personal.id')
-            ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
-            ->select('entradas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor')
-            ->where('almacen.seleccionado','=',1)
-            ->orderBy('entradas.id', 'asc')->get();
-        $filas = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
-                ->join('almacen','articulos.id_almacen','=','almacen.id')
-                ->select('entradas.*')->where('almacen.seleccionado','=',1)->get();
-        $resultados = [];
+        $entradas = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
+                            ->join('almacen','articulos.id_almacen','=','almacen.id')
+                            ->join('personal', 'entradas.id_personal', '=', 'personal.id')
+                            ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
+                            ->select(
+                                'entradas.*',
+                                'articulos.codigo',
+                                'articulos.descripcion',
+                                'personal.nomper as personal',
+                                'provedores.nompro as proveedor'
+                            )
+                            ->where('entradas.anio','=',$request->gestion)
+                            ->where('entradas.saldo_inicial','=',false)
+                            ->orderBy('entradas.numero_anual')
+                            ->orderBy('entradas.id')
+                            ->get()
+                            ->groupBy('numero_anual');
+        $datosAgrupados = [];
 
-        foreach ($filas as $fila) {
-            $multiplicacion = $fila->cantidad * $fila->precio_unitario; 
-            $resultados[] = $multiplicacion;
+        foreach ($entradas as $numeroAnual => $grupo) {
+            $subtotal = 0;
+            foreach ($grupo as $item) {
+                $subtotal += $item->cantidad * $item->precio_unitario;
+            }
+
+            $datosAgrupados[] = [
+                'numero_anual' => $numeroAnual,
+                'items' => $grupo,
+                'subtotal' => $subtotal
+            ];
         }
-        $factura = Facturas::where('codcontrol','=',0)->get();
-        $total = array_sum($resultados);
+
         $titulo = 'Listado de Compras';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
         $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();
       
      $pdf=Pdf::loadView('plantillapdf.reporteentradas',[
-            'datos'=>$datos,
+            'datosAgrupados' => $datosAgrupados,
             'titulo'=>$titulo,
             'subtitulo'=>$fechaTitulo,
             'fechaDerecha'=>$fechDerecha,
             'almacen'=>$almacen->nomalmacen,
             'establecimiento'=>$establecimiento->nomestab,
             'ciudad'=>$ciudad->nomciudad,
-            'total'=>$total,
-            'factura'=>$factura,
             ]);
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
@@ -433,5 +453,65 @@ class EntradasController extends Controller
 
         }
         
+    }
+    public function gestiones(){
+        try{
+            $gestiones = Entradas::select('anio as gestion')->distinct()->orderBy('anio', 'desc')->get();
+            return response()->json($gestiones);
+        }catch(\Exception $e){
+            return response()->json(['error' => 'Error al obtener las gestiones: ' . $e->getMessage()], 500);
+        }
+    }
+    public function resumengestion(Request $request){
+        try{
+           $gestion = $request->gestion;
+           $entrada = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
+            ->join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+            ->select(
+                'partidas.codigo',
+                'partidas.nompartida',
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad ELSE 0 END) as stock_inicial'),
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = false THEN entradas.cantidad ELSE 0 END) as compras'),
+                //salidas
+                DB::raw('sum(entradas.restante) as stock_final'),
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad * entradas.precio_unitario ELSE 0 END) as total_inicio'),
+                DB::raw('sum(entradas.restante * entradas.precio_unitario) as total_final'))
+            ->where('entradas.anio','=', $gestion)
+            ->groupBy('partidas.codigo', 'partidas.nompartida')->orderby('partidas.codigo', 'asc');
+
+            $salida = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
+            ->join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+            ->select(
+                'partidas.codigo',
+                'partidas.nompartida',
+                //DB::raw('sum(salidas.cantidad * salidas.precio_unitario) as total_salidas'), 
+                DB::raw('sum(salidas.cantidad) as cantidad_salidas'))
+            ->where('salidas.anio','=', $gestion)
+            ->groupBy('partidas.codigo', 'partidas.nompartida')->orderby('partidas.codigo', 'asc');
+
+                // Obtener los resultados como arrays
+            $entradas = $entrada->get()->keyBy('codigo')->toArray();
+            $salidas = $salida->get()->keyBy('codigo')->toArray();
+
+            $partidas = [];
+
+            foreach ($entradas as $codigo => $entrada) {
+                $salida = $salidas[$codigo] ?? ['cantidad_salidas' => 0];
+               
+                $partidas[] = [
+                    'codigo'         => $codigo,
+                    'nompartida'     => $entrada['nompartida'],
+                    'stock_inicial'  => $entrada['stock_inicial'],
+                    'compras'        => $entrada['compras'],
+                    'pedidos'        => $salida['cantidad_salidas'], // ← este es "Pedidos"
+                    'stock_final'    => $entrada['stock_final'],
+                    'total_inicio'   => $entrada['total_inicio'],
+                    'total_final'    => $entrada['total_final'],
+                ];
+            }
+            return response()->json($partidas);
+        }catch(\Exception $e){
+            return response()->json(['error' => 'Error al obtener el resumen de la gestión: ' . $e->getMessage()], 500);
+        }
     }
 }

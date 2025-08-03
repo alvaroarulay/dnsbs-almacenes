@@ -14,70 +14,74 @@
         </ul>
         
       </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-12 justify-content-center">
             <div class="card border-secondary mb-3">
                 <div class="card-header text-bg-secondary mb-3">Compras y Pedidos</div>
                 <div class="card-body text-primary">
                     <div class="row">
-                        <label for="" class="form-label">Establecimiento</label>
-                        <div class="input-group mb-3 ">
-                            <span class="input-group-text" id="establecimiento"><i class="bi bi-ticket"></i></span>
-                            <select name="" aria-describedby="establecimiento" class="form-select" v-model="estabSeleccionado"  @change="onChangeEstablecimiento($event)">
-                                <option value="0">Todos los Establecimientos</option>
-                                <option v-for="establecimiento in establecimientos" :key="establecimiento.id" :value="establecimiento.id">
-                                    {{ establecimiento.nomestab }}
-                                </option>
-                            </select>
+                        <div class="col-md-4">
+                          <label for="" class="form-label">Establecimiento</label>
+                            <div class="input-group mb-3 ">
+                                <span class="input-group-text" id="establecimiento"><i class="bi bi-ticket"></i></span>
+                                <select name="" aria-describedby="establecimiento" class="form-select" v-model="estabSeleccionado"  @change="onChangeEstablecimiento($event)">
+                                    <option value="0">Todos los Establecimientos</option>
+                                    <option v-for="establecimiento in establecimientos" :key="establecimiento.id" :value="establecimiento.id">
+                                        {{ establecimiento.nomestab }}
+                                    </option>
+                                </select>
+                            </div>   
                         </div>
-                    </div>
-                    <div class="row">
-                        <label for="" class="form-label">Nombre de Almacen</label>
-                    <div class="input-group mb-3 ">
-                        <span class="input-group-text" id="almacen"><i class="bi bi-ticket"></i></span>
-                         <select name="" aria-describedby="almacen" class="form-select" v-model="almacenSeleccionado"  @change="onChangeAlmacen($event)">
-                            <option value="0">Todos los Almacenes</option>
-                            <option v-for="almacen in almacenes" :key="almacen.id" :value="almacen.id">
-                                {{ almacen.nomalmacen }}
-                            </option>
-                        </select>
-                    </div>
-                    </div>
-                    <div class="row">
-                        <label for="" class="form-label">Partidas</label>
-                        <div class="input-group mb-3">   
-                             <span class="input-group-text" id="partidas"><i class="bi bi-ticket"></i></span>
-                            <select name="" id="" aria-describedby="partidas" class="form-select" v-model="partidas">
-                                <option value="0">Todas las partidas</option>
-                                <option v-for="partida in arrayPartidas" :key="partida.id" :value="partida.id">
-                                    {{partida.codigo +'-'+ partida.nompartida }}
-                                </option>
-                            </select>
+                        <div class="col-md-4">
+                             <label for="" class="form-label">Nombre de Almacen</label>
+                            <div class="input-group mb-3 ">
+                                <span class="input-group-text" id="almacen"><i class="bi bi-ticket"></i></span>
+                                <select name="" aria-describedby="almacen" class="form-select" v-model="almacenSeleccionado"  @change="onChangeAlmacen($event)">
+                                    <option value="0">Todos los Almacenes</option>
+                                    <option v-for="almacen in almacenes" :key="almacen.id" :value="almacen.id">
+                                        {{ almacen.nomalmacen }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
+                        <div class="col-md-4">
+                            <label for="" class="form-label">Partidas</label>
+                            <div class="input-group mb-3">   
+                                <span class="input-group-text" id="partidas"><i class="bi bi-ticket"></i></span>
+                                <select name="" id="" aria-describedby="partidas" class="form-select" v-model="partidas">
+                                    <option value="0">Todas las partidas</option>
+                                    <option v-for="partida in arrayPartidas" :key="partida.id" :value="partida.id">
+                                        {{partida.codigo +'-'+ partida.nompartida }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                       
                     </div>
                     <div class="row">
-                        <fieldset class="mb-3">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" id="optionsRadios1" type="radio" name="optionsRadios" value="compras" checked="" v-model="chcompraspedidos">Compras (Entradas)
-                                </label>
-                                </div>
+                        <div class="col-md-4">
+                            <fieldset class="mb-3">
                                 <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" id="optionsRadios2" type="radio" name="optionsRadios" value="pedidos" v-model="chcompraspedidos">Pedidos (Salidas)
-                                </label>
-                                </div>
-                        </fieldset>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" id="optionsRadios1" type="radio" name="optionsRadios" value="compras" checked="" v-model="chcompraspedidos">Compras (Entradas)
+                                    </label>
+                                    </div>
+                                    <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" id="optionsRadios2" type="radio" name="optionsRadios" value="pedidos" v-model="chcompraspedidos">Pedidos (Salidas)
+                                    </label>
+                                    </div>
+                            </fieldset> 
+                        </div>
+                       
+                        <div class="col-md-4">
                              <label for="" class="form-label">Fecha Incial</label>
                             <div class="input-group mb-3 ">
                                 <span class="input-group-text" id="fechai"><i class="bi bi-calendar-date"></i></span>
                                 <input type="date" class="form-control" aria-describedby="fechai" v-model="fechai">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                         <div class="col-md-4">
                              <label for="" class="form-label">Fecha Final</label>
                             <div class="input-group mb-3 ">
                                 <span class="input-group-text" id="fechaf"><i class="bi bi-calendar-date"></i></span>
@@ -85,17 +89,84 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
                 <div class="card-footer text-center d-grid gap-2 d-md-flex justify-content-md-end">
 
                     <button class="btn btn-info me-md-2" type="button" @click="graficocompras"><i class="bi bi-bar-chart-line-fill"></i>Ver Gráfico</button>
                     <button class="btn btn-danger me-md-2" type="button"  @click="pdfcompras"><i class="bi bi-file-pdf"></i>Pdf</button>
-                    <button class="btn btn-success me-md-2" type="button" @click="excelcompras" ><i class="bi bi-file-earmark-excel"></i>Excel</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row">
+<div class="justify-content-center">
+             <div class="card border-info col-md-12 mb-3">
+                <div class="card-header text-bg-info mb-3">Resumen por Gestión</div>
+                <div class="card-body text-primary">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover table-sm">
+                            <thead>
+                                <tr class="table-success">
+                                    <th>Partida</th>
+                                    <th>Stock Inicial</th>
+                                    <th>Entradas (Cantidad)</th>
+                                    <th>Salidas (Cantidad)</th>
+                                    <th>Stock Final </th>
+                                    <th>Total al Inicio (en Bs.)</th>
+                                    <th>Total al Final (en Bs.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="resumen in arrayResumen" :key="resumen.codigo">
+                                    <td>{{ resumen.codigo + '-' + resumen.nompartida }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.stock_inicial) }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.compras) }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.pedidos) }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.stock_final) }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.total_inicio) }}</td>
+                                    <td style="text-align: right;">{{ format(resumen.total_final)  }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><b>Totales:</b></td>
+                                    <td style="text-align: right;"><b>{{ format(total_inicio) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ format(total_compras) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ format(total_pedidos) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ format(stock_final) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ format(total_al_inicio) }}</b></td>
+                                    <td style="text-align: right;"><b>{{ format(total_al_final) }}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="form-label">Gestión</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select name="" id="" class="form-select" v-model="gestionSeleccionada" @change="onChangeGestion($event)">
+                                        <option value="0">Seleccione...</option>
+                                         <option v-for="gestion in gestiones" :key="gestion.gestion" :value="gestion.gestion">
+                                            {{ gestion.gestion }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                           <button class="btn btn-success me-md-2" type="button" @click="excelcompras" ><i class="bi bi-file-earmark-excel"></i>Excel</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
     <!-- modal-content -->
      <div class="modal fade" tabindex="-1" :class="{'mostrar' : modalgraficoc}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" data-target=".bd-example-modal-lg">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
@@ -202,6 +273,10 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
     const chcompraspedidos = ref('compras');
     const pdf = ref('');
 
+    const gestionSeleccionada = ref(0);
+    const gestiones = ref([]);
+    const arrayResumen = ref([]);
+
     const chartData = ref({
     labels: [],
     datasets: [{ data: [] }]
@@ -210,6 +285,14 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
     const chartOptions = {
     responsive: true
     }
+    const obtenerGestiones = async () => {
+        try {
+            const response = await axios.get('/gestiones');
+            gestiones.value = response.data;
+        } catch (error) {
+            console.error('Error al obtener las gestiones:', error);
+        }
+    };
     const obtenerCiudades = async () => {
         try {
             const response = await axios.get('/ciudades');
@@ -353,14 +436,30 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
         ]
         }
     }
-   const totalsum = computed(() =>
+    const totalsum = computed(() =>
     array.value.reduce((sum, item) => sum + Number(item.total), 0)
     );
-
     const totalvalor = computed(() =>
     array.value.reduce((sum, item) => sum + Number(item.valor), 0)
     );
-
+    const total_inicio = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.stock_inicial), 0)
+    );
+    const total_compras = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.compras), 0)
+    );
+    const total_pedidos = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.pedidos), 0)
+    );
+    const stock_final = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.stock_final), 0)
+    );
+    const total_al_inicio = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.total_inicio), 0)
+    );
+    const total_al_final = computed(() =>
+    arrayResumen.value.reduce((sum, item) => sum + Number(item.total_final), 0)
+    );
     const format = (value) => {
     return new Intl.NumberFormat('es-BO', {
         minimumFractionDigits: 2,
@@ -379,9 +478,38 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
             console.error('Error al obtener los pdf:', error);
         }
     }
+     const excelcompras = async () => {
+         try {
+           const url = `/exportar-reporte?gestion=${gestionSeleccionada.value}`;
+           window.open(url, '_blank');
+       } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }
+    function onChangeGestion(e){
+        gestionSeleccionada.value = e.target.value;
+        if(gestionSeleccionada.value!=0){
+            resumengestion();
+        }else{
+            array.value=[];
+            etiquetas.value=[];
+            valores.value=[];
+            total.value=[];
+            chartData.value ={labels: [],datasets: [{ data: [] }]};
+        }
+    }
+    const resumengestion = async () => {
+        try {
+            const response = await axios.get(`/resumengestion?gestion=${gestionSeleccionada.value}`);
+            arrayResumen.value = response.data;
+        } catch (error) {
+            console.error('Error al obtener los partidas:', error);
+        }
+    };
     onMounted(() => {   
         obtenerCiudades();
         obtenerEstablecimientos(ciudadSeleccionada.value);
         obtenerpartidas();
+        obtenerGestiones();
     });
 </script>

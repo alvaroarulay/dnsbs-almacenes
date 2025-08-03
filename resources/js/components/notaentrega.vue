@@ -9,10 +9,24 @@
         <div class="tile">
             <h3 class="tile-title">Notas de Compra</h3>
             <div class="row mb-3">
-                <div class="col-md-4 col-md-offset-3 justify-content-start">
-                    <button class="btn btn-danger" @click="verpdf"><i class="bi bi-file-earmark-pdf"></i>Ver Pdf</button>
+                <div class="col-md-6 col-md-offset-3 justify-content-start">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="form-label">Gestión</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="" id="" class="form-select" v-model="gestionSeleccionada" @change="onChangeGestion($event)">
+                                <option v-for="gestion in gestiones" :key="gestion.gestion" :value="gestion.gestion">
+                                    {{ gestion.gestion }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                             <button class="btn btn-danger" @click="verpdf"><i class="bi bi-file-earmark-pdf"></i>Ver Pdf</button>
+                        </div>
+                    </div> 
                 </div>
-                <div class="text-end col-md-8">
+                <div class="text-end col-md-6">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Criterio:</label>
@@ -37,6 +51,8 @@
                             <th>Gestión</th>
                             <th>Proveedor</th>
                             <th>Fecha de Nota</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
                             <th>Fecha de Creación</th>
                             <th>Personal Vinculado</th> 
                             <th>Opciones</th>  
@@ -48,6 +64,8 @@
                             <td>{{ entrada.anio }}</td>
                             <td>{{ entrada.nompro}}</td>
                             <td>{{ new Date(entrada.fecha).toLocaleDateString() }}</td>
+                            <td style="text-align: right;">{{ format(entrada.cantidad) }}</td>
+                            <td style="text-align: right;">{{ format(entrada.total) }}</td>
                             <td>{{ new Date(entrada.created_at).toLocaleDateString() }}</td>
                             <td>{{ entrada.nomper }}</td>
                             <td class="text-center">
@@ -163,6 +181,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import axios from 'axios';
+    const gestiones = ref([]);
+    const gestionSeleccionada = ref(0);
     const tituloAlmacen= ref('');
     const entradas = ref([]);
     const buscar = ref('');
@@ -199,6 +219,19 @@ import axios from 'axios';
         }
         return pages
         });
+    const obtenerGestiones = async () => {
+        if (gestionSeleccionada.value == 0) {
+            const fechaActual = new Date();
+            gestionSeleccionada.value = fechaActual.getFullYear();
+        }
+        try {
+            const response = await axios.get('/gestiones');
+            gestiones.value = response.data;
+            gestionSeleccionada.value = response.data[0].gestion || 0;
+        } catch (error) {
+            console.error('Error al obtener las gestiones:', error);
+        }
+    };
     const obtenertitulo = async () => {
         try {
             const response = await axios.get('/almacen/titulo');
@@ -209,12 +242,18 @@ import axios from 'axios';
     };
     const obtenerNotas = async (page,buscar,criterio) => {
         try {
-            const response = await axios.get('/entradas/notas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio);
+            const response = await axios.get('/entradas/notas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio + '&anio=' + gestionSeleccionada.value);
             entradas.value = response.data.entradas.data;
             Object.assign(pagination, response.data.pagination)
         } catch (error) {
             console.error('Error al obtener las Entradas:', error);
         }
+    };
+     const format = (value) => {
+    return new Intl.NumberFormat('es-BO', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
     };
     const listarArticulo = async (page, buscar, criterio) => {
         try {
@@ -269,7 +308,7 @@ import axios from 'axios';
     };
     function verpdf() {
         modalpdf.value = true;
-        pdf.value = '/entradas/pdf';
+        pdf.value = `/entradas/pdf?gestion=${gestionSeleccionada.value}`;
     };
     function updatenota(data=[]){
         modaledit.value=true;
@@ -332,15 +371,22 @@ import axios from 'axios';
     function cerrarModal(){
         modaledit.value=false;
         limpiarCampos();
-    };
-    function limpiarCampos() {
-        
-    };
+    }; 
+    function onChangeGestion(e){
+        gestionSeleccionada.value = e.target.value;
+        if (gestionSeleccionada.value != 0) {
+            obtenerNotas(1, '', '');
+        } else {
+            entradas.value = [];
+        }
+    }
     function pdfnota(data=[]) {
         modalpdf.value = true;
         pdf.value = '/entradas/entradapdf/'+ data.fecha+ '/' + data.anio + '/' + data.numero_anual;
     };
+    
     onMounted(() => {
+        obtenerGestiones();
         obtenertitulo();
         obtenerNotas(1,'','');
 });

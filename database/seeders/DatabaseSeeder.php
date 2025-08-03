@@ -20,7 +20,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(SalidasSeeder::class);
-        $this->call(Salidas2025Seeder::class);
+         /*$this->call(SalidasSeeder::class);
+        $this->call(facturas2024Seeder::class);*/
+        //$this->call(entradas2025Seeder::class);
+        $this->call(facturas2025Seeder::class);
+        //$this->call(Salidas2025Seeder::class);
+        
     }
 }

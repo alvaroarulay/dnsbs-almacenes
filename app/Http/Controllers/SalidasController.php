@@ -14,7 +14,8 @@ use App\Models\Ciudad;
 use App\Models\Facturas;
 use App\Models\Movimientos;
 use Jenssegers\Date\Date;
-
+use App\Exports\SalidasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalidasController extends Controller
 {
@@ -53,14 +54,17 @@ class SalidasController extends Controller
         $query = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
                 ->join('almacen','articulos.id_almacen','=','almacen.id')
                 ->join('personal','salidas.id_personal','=','personal.id')
-                ->select('salidas.numero_anual','salidas.anio','salidas.fecha','salidas.created_at','personal.nomper')
-                ->where('almacen.seleccionado','=',1)
+                ->join('movimientos','salidas.id','=','movimientos.id_salida')
+                ->select('salidas.numero_anual','salidas.anio','salidas.fecha','salidas.created_at','personal.nomper',
+                DB::raw('sum(salidas.cantidad) as cantidad'),
+                DB::raw('sum(salidas.cantidad * movimientos.precio_unitario) as total'))
+                ->where('anio','=',$request->anio)
                 ->groupBy('personal.nomper')
                 ->groupBy('salidas.fecha')
                 ->groupBy('salidas.anio')
                 ->groupBy('salidas.created_at')
                 ->groupBy('salidas.numero_anual')
-                ->orderBy('salidas.created_at','desc');
+                ->orderBy('salidas.numero_anual','asc');
         if ($buscar=='') {
             $salidas = $query->paginate(10);
         } else {
@@ -116,7 +120,7 @@ class SalidasController extends Controller
                 $salida->id_personal = $request->idpersonal;
                 $salida->save();
 
-                $entradas = Entradas::select('id','restante','fecha','precio_unitario')->where('id_articulo','=',$pedido['idarticulo'])->where('restante', '>', 0)->orderBy('fecha','asc')->get();
+                $entradas = Entradas::select('id','restante','fecha','precio_unitario')->where('id_articulo','=',$pedido['idarticulo'])->where('restante', '>', 0)->where('anio', $anioActual)->orderBy('fecha','asc')->get();
                 $satisfecho=$pedido['cantidad'];
                 
                 foreach ($entradas as $entrada){
@@ -217,42 +221,61 @@ class SalidasController extends Controller
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
         }
-    public function pdfSalidas(){
+    public function pdfSalidas(Request $request){
         Date::setLocale('es');
         $fechaTitulo = Date::now()->format(' j \\de F \\de Y');
         $fechDerecha = Date::now()->format('d/M/Y');
-        $datos = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
-            ->join('almacen','articulos.id_almacen','=','almacen.id')
-            ->join('personal', 'salidas.id_personal', '=', 'personal.id')
-            ->join('movimientos','salidas.id','=','movimientos.id_salida')
-            ->join('entradas','movimientos.id_entrada','=','entradas.id')
-            ->select('salidas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal','movimientos.precio_unitario','entradas.numero_anual as nota','entradas.anio')
-            ->where('almacen.seleccionado','=',1)
-            ->where('salidas.anio','=',now()->year)
-            ->get();
-        $resultados = [];
+        $salidas = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
+                            ->join('almacen','articulos.id_almacen','=','almacen.id')
+                            ->join('personal', 'salidas.id_personal', '=', 'personal.id')
+                            ->join('movimientos','salidas.id','=','movimientos.id_salida')
+                            ->join('entradas','movimientos.id_entrada','=','entradas.id')
+                            ->select(
+                                'salidas.*',
+                                'entradas.precio_unitario',
+                                'articulos.codigo',
+                                'articulos.descripcion',
+                                'personal.nomper as personal',
+                            )
+                            ->where('salidas.anio','=',$request->gestion)
+                            ->orderBy('salidas.numero_anual')
+                            ->orderBy('salidas.id')
+                            ->get()
+                            ->groupBy('numero_anual');
+        $datosAgrupados = [];
 
-        foreach ($datos as $fila) {
-            $multiplicacion = $fila->cantidad * $fila->precio_unitario; 
-            $resultados[] = $multiplicacion;
+        foreach ($salidas as $numeroAnual => $grupo) {
+            $subtotal = 0;
+            foreach ($grupo as $item) {
+                $subtotal += $item->cantidad * $item->precio_unitario;
+            }
+
+            $datosAgrupados[] = [
+                'numero_anual' => $numeroAnual,
+                'items' => $grupo,
+                'subtotal' => $subtotal
+            ];
         }
-        $total = array_sum($resultados);
+
         $titulo = 'Listado de Pedidos';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
         $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();
       
      $pdf=Pdf::loadView('plantillapdf.reportesalidas',[
-            'datos'=>$datos,
+            'datosAgrupados' => $datosAgrupados,
             'titulo'=>$titulo,
             'fechaTitulo'=>$fechaTitulo,
             'fechaDerecha'=>$fechDerecha,
             'almacen'=>$almacen->nomalmacen,
             'establecimiento'=>$establecimiento->nomestab,
             'ciudad'=>$ciudad->nomciudad,
-            'total'=>$total
             ]);
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
+    }
+    public function exportarReporte(Request $request){
+        $gestion=$request->gestion;
+        return Excel::download(new SalidasExport($gestion), 'resumen.xlsx');
     }
 }

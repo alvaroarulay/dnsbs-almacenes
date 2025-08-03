@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->string('codautorizacion')->nullable();
             $table->string('codcontrol')->nullable();
-            $table->integer('monto');
+            $table->decimal('monto', 10, 2);
             $table->integer('nro_anual');
             $table->integer('gestion');
             $table->foreignId('id_provedor')->constrained('provedores');

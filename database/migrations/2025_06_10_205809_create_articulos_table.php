@@ -740,8 +740,8 @@ return new class extends Migration
         DB::table('articulos')->insert(array('cod_anterior'=>'311009848','codigo'=>'333001','descripcion'=>'LENTES DE PROTECCION','id_unidad'=>31,'id_partida'=>4,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311007002','codigo'=>'341101-001','descripcion'=>'0','id_unidad'=>16,'id_partida'=>5,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311007008','codigo'=>'341107-001','descripcion'=>'GRASA PARA IMRESORA EPSON','id_unidad'=>16,'id_partida'=>5,'id_almacen'=>1));
-        DB::table('articulos')->insert(array('cod_anterior'=>'311009521','codigo'=>'342002-014','descripcion'=>'BILIRRUBINA D/T 100 DET.','id_unidad'=>24,'id_partida'=>5,'id_almacen'=>1));
-        DB::table('articulos')->insert(array('cod_anterior'=>'311009558','codigo'=>'342021-084','descripcion'=>'TUBOS EPPENDORF','id_unidad'=>7,'id_partida'=>5,'id_almacen'=>1));
+        DB::table('articulos')->insert(array('cod_anterior'=>'311009521','codigo'=>'342002-014','descripcion'=>'BILIRRUBINA D/T 100 DET.','id_unidad'=>24,'id_partida'=>6,'id_almacen'=>1));
+        DB::table('articulos')->insert(array('cod_anterior'=>'311009558','codigo'=>'342021-084','descripcion'=>'TUBOS EPPENDORF','id_unidad'=>7,'id_partida'=>6,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311007567','codigo'=>'342030-014','descripcion'=>'CLORFENIRAMINA DE 10 MG','id_unidad'=>45,'id_partida'=>6,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311007845','codigo'=>'342055-108','descripcion'=>'ATROPINA SULFATO 1MG','id_unidad'=>45,'id_partida'=>6,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008039','codigo'=>'342058-032','descripcion'=>'DOPAMINA','id_unidad'=>45,'id_partida'=>6,'id_almacen'=>1));
@@ -2886,11 +2886,11 @@ return new class extends Migration
         DB::table('articulos')->insert(array('cod_anterior'=>'311008714','codigo'=>'344007-002','descripcion'=>'GOMA PARA GRADAS Y DESCANSOS','id_unidad'=>66,'id_partida'=>8,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008721','codigo'=>'345017-003','descripcion'=>'PANOPTICO RAPIDO 3 X 500','id_unidad'=>59,'id_partida'=>9,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008722','codigo'=>'345017-004','descripcion'=>'PISOPAK DE ALTO TRAFICO','id_unidad'=>64,'id_partida'=>9,'id_almacen'=>1));
-        DB::table('articulos')->insert(array('cod_anterior'=>'311008715','codigo'=>'345002-001','descripcion'=>'ATOMIZADOR CON GATILLO PARA 1 LITRO SIN FRASCO','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
+        DB::table('articulos')->insert(array('cod_anterior'=>'311008715','codigo'=>'345002-001','descripcion'=>'ATOMIZADOR CON GATILLO PARA 1 LITRO SIN FRASCO','id_unidad'=>31,'id_partida'=>11,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008716','codigo'=>'345012-001','descripcion'=>'LETREROS EN ACRILICO','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008717','codigo'=>'345012-002','descripcion'=>'LETREROS EN ACRILICO SEGUN MUESTRA','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008718','codigo'=>'345013-001','descripcion'=>'MAPA DE UBICACION','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
-        DB::table('articulos')->insert(array('cod_anterior'=>'311008719','codigo'=>'345017-001','descripcion'=>'COLORANTE PANOPTICO 3 X 1 L.','id_unidad'=>24,'id_partida'=>9,'id_almacen'=>1));
+        DB::table('articulos')->insert(array('cod_anterior'=>'311008719','codigo'=>'345017-001','descripcion'=>'COLORANTE PANOPTICO 3 X 1 L.','id_unidad'=>24,'id_partida'=>11,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008720','codigo'=>'345017-002','descripcion'=>'PANEL INFORMATIVO ROL HORACLINICA','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008723','codigo'=>'345017-005','descripcion'=>'PIZARRA ACRILICA CON MARCO ALUMIN','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311008724','codigo'=>'345017-006','descripcion'=>'PIZARRA INFORMATIVA DISTRIB.CONSU','id_unidad'=>31,'id_partida'=>9,'id_almacen'=>1));
@@ -3415,7 +3415,7 @@ return new class extends Migration
         DB::table('articulos')->insert(array('cod_anterior'=>'311009894','codigo'=>'393001-033','descripcion'=>'RALLADOR DE 4 LADOS (TRAMONTINA)','id_unidad'=>38,'id_partida'=>19,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311009895','codigo'=>'393001-034','descripcion'=>'LLAVE PARA ABRIR GARRAFA','id_unidad'=>38,'id_partida'=>19,'id_almacen'=>1));
         DB::table('articulos')->insert(array('cod_anterior'=>'311009895','codigo'=>'398017--00','descripcion'=>'PILAS ALCALINA DOBLE A','id_unidad'=>87,'id_partida'=>15,'id_almacen'=>1));
-        DB::table('articulos')->insert(array('cod_anterior'=>'311009895','codigo'=>'3911010-00','descripcion'=>'DETERGENTE EN POLVO DE 2 KILOS','id_unidad'=>86,'id_partida'=>19,'id_almacen'=>11));
+        DB::table('articulos')->insert(array('cod_anterior'=>'311009895','codigo'=>'3911010-00','descripcion'=>'DETERGENTE EN POLVO DE 2 KILOS','id_unidad'=>86,'id_partida'=>11,'id_almacen'=>11));
         DB::table('articulos')->insert(array('cod_anterior'=>'311009896','codigo'=>'391000-93','descripcion'=>'LAVANDINA 5 LITROS','id_unidad'=>5,'id_partida'=>11,'id_almacen'=>1));
     }
 

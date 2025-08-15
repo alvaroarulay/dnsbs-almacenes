@@ -261,6 +261,8 @@ return new class extends Migration
         DB::table('provedores')->insert(array('nompro'=>'TANIA LIZETH GARCIA MACHACA','direccion'=>'KISGUARANI Nº 8 Z/BARRIO ALTO TACAGUA','telefono'=>'78981835','nit'=>'9895432015'));
         DB::table('provedores')->insert(array('nompro'=>'ABEL ALEJANDRO ITURRI QUISPE','direccion'=>'CHACALTAYA Nº2193 Z/ ACHACHICALA','telefono'=>'78981834','nit'=>'12607038012'));
         DB::table('provedores')->insert(array('nompro'=>'KARIM LIOZNIR HUMEREZ LAURA','direccion'=>'C/C Y DESVIO ACHACHICALA Nº2193','telefono'=>'76211081','nit'=>'12391690019'));
+        DB::table('provedores')->insert(array('nompro'=>'EASY MEDICAL','direccion'=>'C/C Y DESVIO ACHACHICALA Nº2193','telefono'=>'76211081','nit'=>'12391690019'));
+        DB::table('provedores')->insert(array('nompro'=>'YADIRA CARRILLO ALANOCA','direccion'=>'C/C Y DESVIO ACHACHICALA Nº2193','telefono'=>'76211081','nit'=>'12391690019'));
 
     }
 

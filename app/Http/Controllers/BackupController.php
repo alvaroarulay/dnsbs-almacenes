@@ -59,7 +59,16 @@ class BackupController extends Controller
     }
     public function procesar($id){
        $base = Backup::where('id', $id)->first();
+$tableName = 'actual';
+$tempPath = storage_path("app/backups/temp_{$tableName}.sql");
 
+// Extraer solo líneas relacionadas con la tabla "actual"
+$filterCommand = "grep -i '{$tableName}' {$escapedPath} > " . escapeshellarg($tempPath);
+exec($filterCommand);
+
+// Usar el archivo temporal para restaurar
+$escapedTempPath = escapeshellarg($tempPath);
+$command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -d {$escapedDb} -f {$escapedTempPath}";
         if (!$base) {
             return response()->json(['error' => 'Backup no encontrado'], 404);
         }

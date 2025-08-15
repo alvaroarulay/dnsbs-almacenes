@@ -32,30 +32,40 @@ class SalidasExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
         $entrada = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
             ->join('partidas', 'articulos.id_partida', '=', 'partidas.id')
             ->select(
-                'entradas.id',
-                'entradas.fecha',
-                'entradas.numero_anual',
+                //'entradas.id',
+               // 'entradas.fecha',
+                //'entradas.numero_anual',
                 'partidas.codigo',
                 'partidas.nompartida',
                 'articulos.codigo as codigo_articulo',
                 'articulos.descripcion as descripcion_articulo',
                 'entradas.cantidad',
                 'entradas.precio_unitario',
-                DB::raw('(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad ELSE 0 END) as stock_inicial'),
-                DB::raw('CASE WHEN entradas.saldo_inicial = false THEN entradas.cantidad ELSE 0 END as compras'),
-                'entradas.restante as stock_final',
-                DB::raw('CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad * entradas.precio_unitario ELSE 0 END as total_inicio'),
-                DB::raw('entradas.restante * entradas.precio_unitario as total_final')
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad ELSE 0 END) as stock_inicial'),
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = false THEN entradas.cantidad ELSE 0 END) as compras'),
+                DB::raw('sum(entradas.restante) as stock_final'),
+                DB::raw('sum(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad * entradas.precio_unitario ELSE 0 END) as total_inicio'),
+                DB::raw('sum(entradas.restante * entradas.precio_unitario) as total_final')
             )
             ->where('entradas.anio', '=', $gestion)
-            ->orderBy('entradas.numero_anual', 'asc')->get();
+            ->groupBy(
+                //'entradas.id',
+                //'entradas.fecha',
+                //'entradas.numero_anual',
+                'partidas.codigo',
+                'partidas.nompartida',
+                'articulos.codigo',
+                'articulos.descripcion',
+                'entradas.cantidad',
+                'entradas.precio_unitario'
+            )->get();
 
             return collect($entrada);
     }
     public function headings(): array
     {
         return [
-            'ID','fecha de Entrada','Número de Nota', 'Código', 'Nombre Partida', 'Código Artículo', 'Descripción Artículo', 'Cantidad', 'Precio Unitario',
+            'Código', 'Nombre Partida', 'Código Artículo', 'Descripción Artículo', 'Cantidad', 'Precio Unitario',
             'Stock Inicial', 'Compras',  'Stock Final', 'Total Inicio', 'Total Final'
         ];
     }

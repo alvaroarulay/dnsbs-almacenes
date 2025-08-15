@@ -10,7 +10,7 @@ use App\Models\Establecimiento;
 use App\Models\Entradas;
 use App\Models\Ciudad;
 use App\Models\Salidas;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Jenssegers\Date\Date;
 class ArticulosController extends Controller
@@ -23,9 +23,9 @@ class ArticulosController extends Controller
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
                             ->join('entradas', 'articulos.id', '=', 'entradas.id_articulo')
-            ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre','entradas.restante as stock',
+            ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',DB::raw('sum(entradas.restante) as stock'),
                     'almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
-            ->where('almacen.seleccionado','=',1);
+            ->where('almacen.seleccionado','=',1)->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id');
         
         if ($buscar=='') {
             $articulos = $query->paginate(10);
@@ -46,7 +46,7 @@ class ArticulosController extends Controller
        
     }
     public function buscar($cod){
-        $anio = now()->year();
+        $anio =  date('Y');
         try{
             $articulo = Articulos::join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
             ->select('articulos.*','unidades.nomunidad as unidad_nombre')
@@ -67,7 +67,7 @@ class ArticulosController extends Controller
         $partidas = $partida . '-' . $query;
         return response()->json(['partidas'=>$partidas,'codanterior'=>$codanterior]);
     }
-      public function store(Request $request)
+    public function store(Request $request)
     {
         try {
             $almacen = Almacenes::where('seleccionado','=',1)->first();

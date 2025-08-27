@@ -126,11 +126,8 @@
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <label for="" class="form-label">Stock</label>
-                          <div class="input-group">
-                            <span class="input-group-text" id="stock"><i class="bi bi-hash"></i></span>
-                            <input type="text" class="form-control" aria-describedby="stock" v-model="stock" disabled>
-                          </div>
+                            <label for="" class="form-label">Documentación</label>
+                            <input type="file" name="document" accept=".pdf"  class="form-control"  @change="handleDocument">
                         </div>
                     </div>
 
@@ -572,7 +569,8 @@ import axios from 'axios';
     const monto = ref(0);
     const codcontrol = ref('');
     const autorizacion = ref('');
-    
+    const cargando= ref(false);
+    const archivo=ref(null);
     
     const idpersonal = ref(0);
     const pagination = reactive({
@@ -906,6 +904,25 @@ import axios from 'axios';
     function generarpdf() {
         modalpdf.value = true;
         pdf.value = '/entradas/entradapdf/'+ fecha.value + '/' + anio.value + '/' + numeroanual.value;
+    };
+    function handleDocument(event) {
+        cargando.value = false;
+        const file = event.target.files[0];
+        if (file) {
+            const nombre = file.name.toLowerCase();
+            const extensionValida = nombre.endsWith('.pdf');
+
+            if (extensionValida) {
+            archivo.value = file;
+            } else {
+            archivo.value = null;
+            swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Solo se permiten archivos con extensión .pdf',
+            });
+            }
+        }
     };
     function validafinal(){
         errorcfcompra.value=0;

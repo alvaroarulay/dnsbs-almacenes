@@ -58,27 +58,6 @@ class BackupController extends Controller
             }
     }
     public function procesar($id){
-       $base = Backup::where('id', $id)->first();
-$tableName = 'actual';
-$tempPath = storage_path("app/backups/temp_{$tableName}.sql");
-
-// Extraer solo líneas relacionadas con la tabla "actual"
-$filterCommand = "grep -i '{$tableName}' {$escapedPath} > " . escapeshellarg($tempPath);
-exec($filterCommand);
-
-// Usar el archivo temporal para restaurar
-$escapedTempPath = escapeshellarg($tempPath);
-$command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -d {$escapedDb} -f {$escapedTempPath}";
-        if (!$base) {
-            return response()->json(['error' => 'Backup no encontrado'], 404);
-        }
-
-        $backupPath = storage_path('app/backups/' . $base->archivo);
-
-        if (!file_exists($backupPath)) {
-            return response()->json(['error' => 'Archivo de backup no encontrado'], 404);
-        }
-
         try {
             $database = env('DB_DATABASE');
             $username = env('DB_USERNAME');
@@ -91,7 +70,27 @@ $command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -
             $escapedDb   = escapeshellarg($database);
             $escapedHost = escapeshellarg($host);
             $escapedPass = escapeshellarg($password);
+            
+            $base = Backup::where('id', $id)->first();
+            $tableName = 'actual';
+            $tempPath = storage_path("app/backups/temp_{$tableName}.sql");
 
+            // Extraer solo líneas relacionadas con la tabla "actual"
+            $filterCommand = "grep -i '{$tableName}' {$escapedPath} > " . escapeshellarg($tempPath);
+            exec($filterCommand);
+
+            // Usar el archivo temporal para restaurar
+            $escapedTempPath = escapeshellarg($tempPath);
+            $command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -d {$escapedDb} -f {$escapedTempPath}";
+        if (!$base) {
+            return response()->json(['error' => 'Backup no encontrado'], 404);
+        }
+
+        $backupPath = storage_path('app/backups/' . $base->archivo);
+
+        if (!file_exists($backupPath)) {
+            return response()->json(['error' => 'Archivo de backup no encontrado'], 404);
+        }
             // Construir comando
             $command = "PGPASSWORD={$escapedPass} psql -U {$escapedUser} -h {$escapedHost} -d {$escapedDb} -f {$escapedPath}";
 

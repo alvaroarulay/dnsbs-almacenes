@@ -18,6 +18,13 @@
     <template v-if="menu==15"><usuarios></usuarios></template>
     <template v-if="menu==16"><newuser></newuser></template>
     <template v-if="menu==17"><rol></rol></template>
+     <template v-if="menu==20">
+        <main class="app-content">
+            <div class="row justify-content-center">
+                <iframe width="800" height="600" src="https://www.youtube.com/embed/kzBv0mTd3jk?si=caJGM6T5hApuM341" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </main>
+    </template>
     <template v-if="menu==21">
         <main class="app-content">
             <div class="row justify-content-center">
@@ -49,7 +56,13 @@
     <template v-if="menu==3"></template>
     <template v-if="menu==4"></template>
     <template v-if="menu==5"></template>
-
+    <template v-if="menu==20">
+        <main class="app-content">
+            <div class="row justify-content-center">
+                <iframe width="800" height="600" src="https://www.youtube.com/embed/kzBv0mTd3jk?si=caJGM6T5hApuM341" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </main>
+    </template>
     <template v-if="menu==21">
         <main class="app-content">
             <div class="row justify-content-center">

@@ -29,7 +29,7 @@ class SalidasController extends Controller
             ->join('movimientos','salidas.id','=','movimientos.id_salida')
             ->join('entradas','movimientos.id_entrada','=','entradas.id')
             ->select('salidas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal','movimientos.precio_unitario','entradas.numero_anual as nota')
-            ->where('almacen.seleccionado','=',1);
+            ->where('entradas.numero_anual','!=',0);
         if ($buscar=='') {
             $salidas = $query->paginate(10);
         } else {

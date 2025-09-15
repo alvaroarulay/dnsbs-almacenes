@@ -586,6 +586,13 @@ class entradas2025Seeder extends Seeder
         DB::table('entradas')->insert(array('fecha'=>'12/08/2025','cantidad'=>80,'precio_unitario'=>25,'restante'=>80,'numero_anual'=>56,'anio'=>2025,'id_articulo'=>1432,'id_personal'=>1,'id_proveedor'=>187,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
         DB::table('entradas')->insert(array('fecha'=>'12/08/2025','cantidad'=>150,'precio_unitario'=>2.5,'restante'=>150,'numero_anual'=>56,'anio'=>2025,'id_articulo'=>3095,'id_personal'=>1,'id_proveedor'=>187,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
         DB::table('entradas')->insert(array('fecha'=>'12/08/2025','cantidad'=>2,'precio_unitario'=>450,'restante'=>2,'numero_anual'=>56,'anio'=>2025,'id_articulo'=>1307,'id_personal'=>1,'id_proveedor'=>187,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'19/08/2025','cantidad'=>54,'precio_unitario'=>184,'restante'=>54,'numero_anual'=>57,'anio'=>2025,'id_articulo'=>704,'id_personal'=>1,'id_proveedor'=>202,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'19/08/2025','cantidad'=>135,'precio_unitario'=>147,'restante'=>135,'numero_anual'=>58,'anio'=>2025,'id_articulo'=>680,'id_personal'=>1,'id_proveedor'=>202,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'19/08/2025','cantidad'=>107,'precio_unitario'=>174,'restante'=>107,'numero_anual'=>59,'anio'=>2025,'id_articulo'=>685,'id_personal'=>1,'id_proveedor'=>202,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'28/08/2025','cantidad'=>5000,'precio_unitario'=>0.64,'restante'=>5000,'numero_anual'=>60,'anio'=>2025,'id_articulo'=>17,'id_personal'=>1,'id_proveedor'=>159,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'28/08/2025','cantidad'=>10000,'precio_unitario'=>0.55,'restante'=>10000,'numero_anual'=>60,'anio'=>2025,'id_articulo'=>11,'id_personal'=>1,'id_proveedor'=>159,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'28/08/2025','cantidad'=>5000,'precio_unitario'=>0.64,'restante'=>5000,'numero_anual'=>60,'anio'=>2025,'id_articulo'=>458,'id_personal'=>1,'id_proveedor'=>159,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
+        DB::table('entradas')->insert(array('fecha'=>'28/08/2025','cantidad'=>100,'precio_unitario'=>23,'restante'=>100,'numero_anual'=>60,'anio'=>2025,'id_articulo'=>244,'id_personal'=>1,'id_proveedor'=>159,'created_at'=>'15/07/2025','updated_at'=>'15/07/2025'));
 
     }
 }

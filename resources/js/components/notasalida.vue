@@ -57,9 +57,9 @@
                             <td>{{ salida.numero_anual }}</td>
                             <td>{{ salida.anio }}</td>
                             <td>{{ new Date(salida.fecha).toLocaleDateString() }}</td>
+                            <td>{{ new Date(salida.created_at).toLocaleDateString() }}</td>
                             <td style="text-align: right;">{{ format(salida.cantidad) }}</td>
                             <td style="text-align: right;">{{ format(salida.total) }}</td>
-                            <td>{{ new Date(salida.created_at).toLocaleDateString() }}</td>
                             <td>{{ salida.nomper }}</td>
                             <td class="text-center">
                                 <button class="btn btn-sm btn-info" @click="pdfnotasalida(salida)">

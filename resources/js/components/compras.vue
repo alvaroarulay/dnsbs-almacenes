@@ -52,7 +52,7 @@
                             <td>{{ entrada.codigo }}</td>
                             <td>{{ entrada.descripcion }}</td>
                             <td>{{ entrada.cantidad }}</td>
-                            <td>{{ entrada.precio_unitario }}</td>
+                            <td>{{ redondeo(entrada.precio_unitario)}}</td>
                             <td> <div v-if="entrada.restante >= 100">
                                     <span class="me-1 badge badge-pill bg-success">{{entrada.restante}}</span>
                                 </div>
@@ -320,7 +320,7 @@
                             <td v-else-if="updcompra==index">
                                 <input class="form-control-sm" type="number" v-model.number="compra.cantidad" v-text="compra.cantidad" @keyup.enter="cambiarcompra(index)">
                             </td>
-                            <td v-if="updcompra!=index">{{ compra.precio }}</td>
+                            <td v-if="updcompra!=index">{{ compra.precio.toFixed(2) }}</td>
                             <td v-else-if="updcompra==index">
                                 <input class="form-control-sm" type="number" v-model.number="compra.precio" v-text="compra.cantidad" @keyup.enter="cambiarcompra(index)">
                             </td>
@@ -939,6 +939,9 @@ import axios from 'axios';
         if(Mostrarcfcompra.value.length){errorcfcompra.value=1}
         return errorcfcompra.value;
     };
+    function redondeo(valor) {
+        return parseFloat(valor).toFixed(2);
+    }
     onMounted(() => {
         obtenertitulo();
         obtenerEntradas(1,'','');

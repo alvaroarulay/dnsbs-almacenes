@@ -19,13 +19,46 @@ class ArticulosController extends Controller
     {
         $buscar = $request->buscar;
         $criterio = $request->criterio;
+        $partida = $request->partida_id;
+        $query = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+                            ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
+                            ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
+            ->select('articulos.*','partidas.codigo as codigo_partida','partidas.nompartida','unidades.nomunidad as unidad_nombre','almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
+            ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id')->orderBy('articulos.codigo', 'asc');
+        if ($partida != 0) {
+            $articulos = $query->where('articulos.id_partida','=', $partida)->paginate(10);
+        }
+        if ($buscar=='') {
+            $articulos = $query->paginate(10);
+        } else {    
+            $articulos = $query->where('articulos.'.$criterio, 'like', '%' . $buscar . '%')->paginate(10);
+        }
+        return [
+            'pagination' => [
+                'total'         => $articulos->total(),
+                'current_page'  => $articulos->currentPage(),
+                'per_page'      => $articulos->perPage(),
+                'last_page'     => $articulos->lastPage(),
+                'from'          => $articulos->firstItem(),
+                'to'            => $articulos->lastItem(),
+            ],
+            'articulos' => $articulos
+        ];
+       
+    }
+     public function stock(Request $request)
+    {
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
         $query = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
                             ->join('entradas', 'articulos.id', '=', 'entradas.id_articulo')
             ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',DB::raw('sum(entradas.restante) as stock'),
                     'almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
-            ->where('almacen.seleccionado','=',1)->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id');
+            ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id')
+            ->havingRaw('SUM(entradas.restante) > 0')
+            ->orderBy('articulos.codigo', 'asc');
         
         if ($buscar=='') {
             $articulos = $query->paginate(10);
@@ -168,7 +201,7 @@ class ArticulosController extends Controller
         'articulos.*',
         'partidas.nompartida as partida',
         'unidades.nomunidad as unidad',
-        'almacen.nomalmacen as almacen')->where('almacen.seleccionado','=',1)->orderBy('articulos.id', 'desc')->get();
+        'almacen.nomalmacen as almacen')->where('almacen.seleccionado','=',1)->orderBy('articulos.codigo', 'asc')->get();
         $titulo = 'Listado de Articulos';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();

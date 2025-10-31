@@ -102,6 +102,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/provedores/buscar/{nit}','ProvedoresController@buscar');
 
         Route::get('/articulos','ArticulosController@index');
+        Route::get('/articulos/stock','ArticulosController@stock');
         Route::post('/articulos/registrar','ArticulosController@store');
         Route::delete('/articulos/eliminar/{id}','ArticulosController@destroy');
         Route::put('/articulos/actualizar','ArticulosController@update');
@@ -145,6 +146,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/backup','BackupController@index');
         Route::get('/download-sql', 'BackupController@store');
         Route::get('/procesar-sql/{id}','BackupController@procesar');
+
+        Route::get('/facturas','FacturasController@index');
+        Route::post('/facturas/registrar','FacturasController@store');
+        Route::put('/facturas/actualizar','FacturasController@update');
         });
     });
 

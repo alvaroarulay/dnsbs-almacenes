@@ -91,9 +91,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-center d-grid gap-2 d-md-flex justify-content-md-end">
-
                     <button class="btn btn-info me-md-2" type="button" @click="graficocompras"><i class="bi bi-bar-chart-line-fill"></i>Ver Gráfico</button>
-                    <button class="btn btn-danger me-md-2" type="button"  @click="pdfcompras"><i class="bi bi-file-pdf"></i>Pdf</button>
                 </div>
             </div>
         </div>
@@ -158,7 +156,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-danger me-md-2" type="button" @click="pdfcompras" ><i class="bi bi-file-earmark-pdf"></i>Pdf</button> 
                            <button class="btn btn-success me-md-2" type="button" @click="excelcompras" ><i class="bi bi-file-earmark-excel"></i>Excel</button> 
                         </div>
                     </div>
@@ -473,7 +472,7 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
     }
      const pdftotal = async () => {
          try {
-           pdf.value = `/entradas/pdftotal?ciudad=${ciudadSeleccionada.value}&establecimiento=${estabSeleccionado.value}&almacen=${almacenSeleccionado.value}&partida=${partidas.value}&pedidos=${chcompraspedidos.value}&fechai=${fechai.value}&fechaf=${fechaf.value}`;
+           pdf.value = `/entradas/pdftotal?gestion=${gestionSeleccionada.value}`;
        } catch (error) {
             console.error('Error al obtener los pdf:', error);
         }

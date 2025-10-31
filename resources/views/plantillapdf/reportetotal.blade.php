@@ -82,13 +82,14 @@
                             <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">COMANDO GENERAL</p>
                             <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;"><b>DIRECCIÓN NACIONAL DE SALUD</b></p>
                             <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;"><b>Y BIENESTAR SOCIAL</b></p>
-                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">{{$ciudad}} - BOLIVIA</p>
+                            <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">La Paz - BOLIVIA</p>
                         </div>
                     </td>
                     <td>
-                        <div style="width: 9.59cm; height: 1.5cm;">
+                        <div style="width: 9.59cm; height: 2cm;">
                             <p style="margin: 0.1cm; text-align: center; padding: 0" ><b>{{$titulo}}</b></p>
                             <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">{{$fechaTitulo}}</p>
+							<p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">(Expresado en Bolivianos)</p>
                         </div>
                     </td>
                     <td>
@@ -118,7 +119,23 @@
 					<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>ALMACEN:</b></p>
 				</td>
 				<td style=" height: .5cm; width:7cm;">
-					<p style="font-size: xx-small; margin: 0.1cm;">{{$almacen}}</p>
+					<p style="font-size: xx-small; margin: 0.1cm;">{{$almacen->nomalmacen}}</p>
+				</td>
+			</tr>
+			<tr style=" height: .5cm;">
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>ACTIVIDAD:</b></p>
+				</td>
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm;">{{$actividad}}</p>
+				</td>
+			</tr>
+			<tr style=" height: .5cm;">
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>FINANCIAMIENTO:</b></p>
+				</td>
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm;">{{$financiamiento}}</p>
 				</td>
 			</tr>
 			<tr style=" height: .5cm;">
@@ -126,45 +143,50 @@
 				<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>ESTABLECIMIENTO:</b></p>
 				</td>
 				<td >
-				<p style="font-size: xx-small; margin: 0.1cm;">{{$establecimiento}}</p>
+				<p style="font-size: xx-small; margin: 0.1cm;">{{$establecimiento->nomestab}}</p>
 				</td>
 			</tr>
         </table>
         <table id="customers">
             <thead>
                 <tr style="border: 1px solid ;">
-                 	<th style="width: 1cm; text-align:center">NRO.</th>
-                    <th style="width: 2cm; text-align:center">CÓDIGO</th>
-					<th style="width: 3.5cm; text-align:center">DESCRIPCIÓN</th>
+                    <th style="width: 3.5cm; text-align:center">CÓDIGO</th>
+					<th style="width: 7cm; text-align:center">DESCRIPCIÓN</th>
 					<th style="width: 2cm; text-align:center">U. MEDIDA</th>
-					<th style="width: 2cm; text-align:center">F. VENC.</th>
-					<th style="width: 2cm; text-align:center">RESPONSABLE</th>
-					<th style="width: 2cm; text-align:center">CANTIDAD</th>
+					<th style="width: 2cm; text-align:center">SALDO</th>
 					<th style="width: 2cm; text-align:center">PRECIO UNITARIO</th>
 					<th style="width: 2cm; text-align:center">TOTAL</th>
                 </tr>
             </thead>
             <tbody>
-            @foreach ($datos as $dato)
-                    <tr>
-                  		<td style="text-align:center;">{{$loop->iteration}}</td>
-                        <td style="text-align:center;">{{$dato->codigo}}</td>
-                        <td>{{$dato->descripcion}}</td>
-						<td style="text-align:center;">{{$dato->unidad}}</td>
-						<td style="text-align:center;">{{$dato->fecha}}</td>
-						<td style="text-align:center;">{{$dato->personal}}</td>
-						<td style="text-align:right;">{{$dato->cantidad}}</td>
-						<td style="text-align:right;">{{$dato->precio_unitario}}</td>
-						<td style="text-align:right;"><b>{{ number_format($dato->cantidad * $dato->precio_unitario, 2, ',', '.')}}</b></td>
-                    </tr>
-            @endforeach
+				@foreach ($partidas as $partida)
+					@if(isset($datos[$partida->id]))
+					<tr>
+						<td style="text-align:center;"><b>{{$partida->codigo}}</b></td>
+						<td colspan="5"><b>{{$partida->codigo . ' - ' . $partida->nompartida}}</b></td>
+					</tr>
+					
+					@foreach ($datos[$partida->id] ?? [] as $dato)
+							<tr>
+								<td style="text-align:center;">{{$dato->codigo_articulo}}</td>
+								<td>{{$dato->descripcion_articulo}}</td>
+								<td style="text-align:center;">{{$dato->unidad_medida}}</td>
+								<td style="text-align:right;">{{$dato->stock_final}}</td>
+								<td style="text-align:right;">{{ number_format($dato->precio_unitario, 2, ',', '.') }}</td>
+								<td style="text-align:right;"><b>{{ number_format($dato->total_final, 2, ',', '.')}}</b></td>
+							</tr>
+					@endforeach
+					<tr>
+						<td colspan="5" style="text-align:right;"><strong>SubTotal {{ $partida->codigo . ' - ' . $partida->nompartida }}:</strong></td>
+						<td style="text-align:right;"><strong>{{ number_format($subtotales[$partida->id]['total_final'], 2, ',', '.') }}</strong></td>
+					</tr>
+					@endif
+			@endforeach
             </tbody>
             <tfoot>
 				<tr>
-					<td style="font-size: xx-small; text-align: right;" colspan="9" ><b>Cantidad: </b>{{$datos->count()}}</td>
-				</tr>
-				<tr>
-					<td style="font-size: xx-small; text-align: right;" colspan="9" ><b>Cantidad: </b>{{number_format($total, 2, ',', '.')}}</td>
+					<td colspan="5" style="text-align:right;"><strong>TOTAL GENERAL:</strong></td>
+					<td style="text-align:right;"><strong>{{ number_format($total, 2, ',', '.') }}</strong></td>
 				</tr>
 			</tfoot>
         </table>

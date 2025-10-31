@@ -15,7 +15,16 @@
                     <button class="btn btn-danger" @click="verpdf"><i class="bi bi-file-earmark-pdf"></i>Ver Pdf</button>
                 </div>
                 <div class="text-end col-md-8">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3" >
+                         <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputpartida">Partida:</label>
+                        </div>
+                       <select name="" aria-describedby="partida" class="form-select" v-model="partidaSeleccionada"  @change="onChangePartida($event)">
+                            <option value="0">Seleccione...</option>
+                            <option v-for="partida in partidas" :key="partida.id" :value="partida.id">
+                                {{partida.codigo +'-'+ partida.nompartida }}
+                            </option>
+                        </select>
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Criterio:</label>
                         </div>
@@ -26,7 +35,7 @@
                         <input type="text" class="form-control" v-model="buscar" @keyup.enter="obtenerArticulos(1, buscar, criterio)"
                                placeholder="Buscar..." aria-label="Buscar" aria-describedby="button-addon2">
                         <button class="btn btn-info btn-sm" @click="obtenerArticulos(1, buscar, criterio)">
-                            <i class="bi bi-search"></i> Buscar </button>
+                            <i class="bi bi-search" ></i> Buscar </button>
                     </div>
                 </div>
                 </div>
@@ -35,11 +44,10 @@
                         <table class="table" id="tabla-articulos">
                             <thead>
                             <tr class="table-secondary">
-                                <th>#</th>
-                                <th>Código</th>
+                                <th>Partida</th>
+                                <th style="width: 100px;">Código</th>
                                 <th>Descripción</th>
                                 <th>Unidad</th>
-                                <th>Partida</th>
                                 <th>Almacen</th>  
                                 <th>Fecha de Expiración (dias restantes)</th>
                                 <th class="text-center">Acciones</th>
@@ -47,11 +55,10 @@
                             </thead>
                             <tbody>
                                 <tr v-for="articulo in articulos" :key="articulo" v-if="articulos.length!=0">
-                                    <td>{{ articulo.id }}</td> 
+                                    <td>{{ articulo.codigo_partida +' - '+ articulo.nompartida }}</td>
                                     <td>{{ articulo.codigo }}</td>
                                     <td>{{ articulo.descripcion }}</td>
                                     <td>{{ articulo.unidad_nombre }}</td>
-                                    <td>{{ articulo.partida_nombre }}</td>
                                     <td>{{ articulo.almacen_nombre }}</td>
                                     <td> 
                                         <div v-if="obtenerdias(articulo) == 'No aplica'">
@@ -287,7 +294,7 @@ import axios from 'axios';
         });
     const obtenerArticulos = async (page,buscar,criterio) => {
         try {
-            const response = await axios.get('/articulos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio);
+            const response = await axios.get('/articulos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio + '&partida_id=' + partidaSeleccionada.value);
             articulos.value = response.data.articulos.data;
             Object.assign(pagination, response.data.pagination)
         } catch (error) {
@@ -530,6 +537,9 @@ import axios from 'axios';
             nomunidad.value = '';
         }
     };
+    const searchArticulos=async() => {
+        obtenerArticulos(1, buscar.value, criterio.value);
+    }
 
     onMounted(() => {
         obtenertitulo();

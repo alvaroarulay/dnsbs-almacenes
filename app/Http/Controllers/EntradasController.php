@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Almacenes;
 use App\Models\Establecimiento;
 use App\Models\Ciudad;
+use App\Models\Partidas;
 use App\Models\Facturas;
 use Jenssegers\Date\Date;
 
@@ -343,109 +344,60 @@ class EntradasController extends Controller
         
     }
     public function pdftotal(Request $request){
-
-        Date::setLocale('es');
-       
-        $fechDerecha = Date::now()->format('d/M/Y');
-        $idciudad=$request->ciudad;
-        $idestablecimiento=$request->establecimiento;
-        $idalmacen=$request->almacen;
-        $pedido=$request->pedidos;
-        $partida = $request->partida;
         try{
-            if($request->fechai==null && $request->fechaf==null){
-                $fechainicial = Carbon::parse('01-01-'.now()->year);
-                $fechafinal = Carbon::parse('31-12-'.now()->year);
-            }else{
-                $fechainicial=Carbon::parse($request->fechai);
-                $fechafinal=Carbon::parse($request->fechaf);
-            }
-            if($pedido=='compras'){
-                $titulo = 'LISTADO DE COMPRAS';
-                $query = Entradas::join('articulos','articulos.id','=','entradas.id_articulo')
-                                ->join('partidas','articulos.id_partida','=','partidas.id')
-                                ->join('almacen','articulos.id_almacen','=','almacen.id')
-                                ->join('establecimiento','almacen.id_establecimiento','=','establecimiento.id')
-                                ->join('ciudad','establecimiento.id_ciudad','=','ciudad.id')
-                                ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
-                                ->join('personal', 'entradas.id_personal', '=', 'personal.id')
-                ->select('entradas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor')
-                ->whereBetween(DB::raw('DATE(entradas.fecha)'), [$fechainicial, $fechafinal]);
-            }else{
-                $titulo = 'LISTADO DE PEDIDOS';
-                $query = Salidas::join('articulos','articulos.id','=','salidas.id_articulo')
-                                ->leftjoin('movimientos','movimientos.id_salida','=','salidas.id')
-                                ->leftjoin('entradas','movimientos.id_entrada','=','entradas.id')
-                                ->join('partidas','articulos.id_partida','=','partidas.id')
-                                ->join('almacen','articulos.id_almacen','=','almacen.id')
-                                ->join('establecimiento','almacen.id_establecimiento','=','establecimiento.id')
-                                ->join('ciudad','establecimiento.id_ciudad','=','ciudad.id')
-                                ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
-                                ->join('personal', 'entradas.id_personal', '=', 'personal.id')
-                ->select('salidas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor','entradas.precio_unitario')
-                ->whereBetween(DB::raw('DATE(salidas.fecha)'), [$fechainicial, $fechafinal]); 
-            }
-        
-            if($idciudad==0){
-                $ciudad = 'LA PAZ';
-                $establecimiento = 'TODOS LOS ESTABLECIMIENTOS';
-                $almacen = 'TODOS LOS ALMACENES';
-                $partidas=$query->get();
-            }else{
-                if($idestablecimiento==0){
-                    $cc = Ciudad::where('id','=',$idciudad)->first();
-                    $ciudad = $cc->nomciudad;
-                    $establecimiento = 'ESTABLECIMIENTOS DE LA CIUDAD DE '. $ciudad;
-                    $almacen = 'TODOS LOS ALMACENES';
-                    $partidas=$query->where('ciudad.id','=',$idciudad)->get();
-                }else{
-                    if($idalmacen==0){
-                        $cc = Ciudad::where('id','=',$idciudad)->first();
-                        $ciudad = $cc->nomciudad;
-                        $ee = Establecimiento::where('id','=',$idestablecimiento)->first();
-                        $establecimiento = $ee->nomestab;
-                        $almacen = 'TODOS LOS ALMACENES';
-                        $partidas=$query->where('ciudad.id','=',$idciudad)
-                            ->where('establecimiento.id','=',$idestablecimiento)->get();
-                    }else{
-                        $cc = Ciudad::where('id','=',$idciudad)->first();
-                        $ciudad = $cc->nomciudad;
-                        $ee = Establecimiento::where('id','=',$idestablecimiento)->first();
-                        $establecimiento = $ee->nomestab;
-                        $aa = Almacenes::where('id','=',$idalmacen)->first();
-                        $almacen = $aa->nomalmacen;
-                        $partidas=$query->where('ciudad.id','=',$idciudad)
-                            ->where('establecimiento.id','=',$idestablecimiento)
-                            ->where('almacen.id','=',$idalmacen)->get();
-                    }
-                }
-            }
+            Date::setLocale('es');
+            $gestion = $request->gestion;
+            $fechDerecha = Date::now()->format('d/M/Y');
+            $almacen = Almacenes::where('seleccionado','=',1)->first();
+            $actividad = '02 DIR. NAL. DE SALUD Y BIENESTAR SOCIAL';
+            $financiamiento = 'TGN - 11 TGN OTROS';
+            $titulo = 'INVENTARIO ACTUALIZADO';
+            $fechaTitulo = date('d/m/') . $gestion;
+            $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
+            $partidas = Partidas::all();
+            $query = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
+                                ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
+                                ->select(
+                                    'articulos.id as id_articulo',
+                                    'articulos.codigo as codigo_articulo',
+                                    'articulos.descripcion as descripcion_articulo',
+                                    'articulos.id_partida as id_partida',
+                                    'unidades.nomunidad as unidad_medida',
+                                    DB::raw('sum(entradas.restante) as stock_final'),
+                                    DB::raw('AVG(entradas.precio_unitario) as precio_unitario'),
+                                    DB::raw('sum(entradas.restante * entradas.precio_unitario) as total_final')
+                                )
+                                ->where('entradas.anio', '=', $gestion)
+                                ->where('entradas.restante', '!=', 0)
+                                ->groupBy(
+                                    'articulos.id',
+                                    'articulos.codigo',
+                                    'unidades.nomunidad',
+                                    'articulos.descripcion'
+                                )->orderBy('articulos.codigo');
+            $resultado = $query->get()->groupBy('id_partida');
+            $subtotales = $resultado->map(function ($items) {
+                    return [
+                        'total_final' => $items->sum('total_final'),
+                    ];
+                });
+            $total = [
+                'total_final' => collect($query->get())->sum('total_final'),
+            ];
 
-            if($partida == 0){
-                $partidas=$query->get();
-            }else{
-                $partidas=$query->where('partidas.id','=',$partida)->get();
-            }
-            $resultados = [];
 
-            foreach ($query->get() as $fila) {
-                $multiplicacion = $fila->cantidad * $fila->precio_unitario; 
-                $resultados[] = $multiplicacion;
-            }
-            $total = array_sum($resultados);
-            $fecin=new Date($fechainicial);
-            $fecfn = new Date($fechafinal);
-            $fechaTitulo = 'Del '.$fecin->format('d/m/Y') .' al '.$fecfn->format('d/m/Y');
             $pdf=Pdf::loadView('plantillapdf.reportetotal',[
-                'datos'=>$partidas,
+                'partidas'=>$partidas,
+                'datos'=>$resultado,
                 'titulo'=>$titulo,
                 'fechaTitulo'=>$fechaTitulo,
                 'fechaDerecha'=>$fechDerecha,
                 'almacen'=>$almacen,
                 'establecimiento'=>$establecimiento,
-                'ciudad'=>$ciudad,
-                'subtitulo'=>'',
-                'total'=>$total,
+                'actividad'=>$actividad,
+                'financiamiento'=>$financiamiento,
+                'subtotales' => $subtotales,
+                'total' => $total['total_final'],
                 ]);
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
@@ -476,6 +428,8 @@ class EntradasController extends Controller
                 DB::raw('sum(entradas.restante) as stock_final'),
                 DB::raw('sum(CASE WHEN entradas.saldo_inicial = true THEN entradas.cantidad * entradas.precio_unitario ELSE 0 END) as total_inicio'),
                 DB::raw('sum(entradas.restante * entradas.precio_unitario) as total_final'))
+
+
             ->where('entradas.anio','=', $gestion)
             ->groupBy('partidas.codigo', 'partidas.nompartida')->orderby('partidas.codigo', 'asc');
 
@@ -485,6 +439,7 @@ class EntradasController extends Controller
                 'partidas.codigo',
                 'partidas.nompartida',
                 //DB::raw('sum(salidas.cantidad * salidas.precio_unitario) as total_salidas'), 
+                
                 DB::raw('sum(salidas.cantidad) as cantidad_salidas'))
             ->where('salidas.anio','=', $gestion)
             ->groupBy('partidas.codigo', 'partidas.nompartida')->orderby('partidas.codigo', 'asc');
@@ -514,4 +469,5 @@ class EntradasController extends Controller
             return response()->json(['error' => 'Error al obtener el resumen de la gestión: ' . $e->getMessage()], 500);
         }
     }
+
 }

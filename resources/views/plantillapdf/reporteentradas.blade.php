@@ -129,34 +129,34 @@
 			</tr>
         </table>
        @foreach ($datosAgrupados as $grupo)
-    <h5>Nota: {{ $grupo['numero_anual'] }}</h5>
-    <table id="customers" style="width: 100%; margin-top: 0.2cm;">
-        <thead>
-            <tr style="border: 1px solid ;">
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Precio U.</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($grupo['items'] as $item)
-                <tr>
-                    <td>{{ $item->codigo }}</td>
-                    <td>{{ $item->descripcion }}</td>
-                    <td style="text-align: right;">{{ $item->cantidad }}</td>
-                    <td style="text-align: right;">{{ number_format($item->precio_unitario, 2) }}</td>
-                    <td style="text-align: right;">{{ number_format($item->cantidad * $item->precio_unitario, 2) }}</td>
-                </tr>
-            @endforeach
-            <tr>
-                <td colspan="4"><strong>Subtotal</strong></td>
-                <td style="text-align: right;"><strong>{{ number_format($grupo['subtotal'], 2) }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
-@endforeach
+			<h5>Nota: {{ $grupo['numero_anual'] }}</h5>
+			<table id="customers" style="width: 100%; margin-top: 0.2cm;">
+				<thead>
+					<tr style="border: 1px solid ;">
+						<th>Código</th>
+						<th>Descripción</th>
+						<th>Cantidad</th>
+						<th>Precio U.</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach ($grupo['items'] as $item)
+						<tr>
+							<td>{{ $item->codigo }}</td>
+							<td>{{ $item->descripcion }}</td>
+							<td style="text-align: right;">{{ $item->cantidad }}</td>
+							<td style="text-align: right;">{{ number_format($item->precio_unitario, 2) }}</td>
+							<td style="text-align: right;">{{ number_format($item->cantidad * $item->precio_unitario, 2) }}</td>
+						</tr>
+					@endforeach
+					<tr>
+						<td colspan="4"><strong>Subtotal</strong></td>
+						<td style="text-align: right;"><strong>{{ number_format($grupo['subtotal'], 2) }}</strong></td>
+					</tr>
+				</tbody>
+			</table>
+		@endforeach
 
 		<hr>
     </main>

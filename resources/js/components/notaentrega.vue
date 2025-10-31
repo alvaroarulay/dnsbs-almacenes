@@ -128,51 +128,83 @@
           <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h4 class="modal-title"> Editar Nota</h4>
+                      <h4 class="modal-title">Agregar Factura</h4>
                       <button type="button" class="close btn btn-danger" @click="cerrarModal()" aria-label="Close" >
                       <span aria-hidden="true">×</span>
                       </button>
                   </div>
-                  <div class="modal-body"> 
-                      <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-sm">
-                                <thead>
-                                    <tr class="table-secondary">
-                                        <th>Código</th>
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio Unitario</th>
-                                        <th>Precio Final</th>
-                                        <th>Guardar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="activo in arrayActivos" :key="activo.id">
-                                        <td v-text="activo.codigo"></td>
-                                        <td v-text="activo.descripcion"></td>
-                                        <td><input type="text" v-model="activo.cantidad"></td>
-                                        <td><input type="text" v-model="activo.precio_unitario"></td>
-                                        <td>{{(activo.precio_unitario*activo.cantidad).toFixed(2)}}</td>
-                                        <td><button class="btn btn-success btn-sm" @click="actualizarentrada(activo)"><i class="bi bi-check"></i></button></td>
-                                    </tr>                                
-                                </tbody>
-                            </table>
-                            <nav v-if="pagination.total > pagination.per_page">
-                                <ul class="pagination">
-                                    <li class="page-item"
-                                    v-for="page in pagesNumber" 
-                                    :key="page" 
-                                    :class="{ active: page === pagination.current_page }"
-                                    >
-                                    <a class="page-link" href="#" @click.prevent="changePageBusqueda(page)">{{ page }}</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                      </div>
+                    <div class="modal-body"> 
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            <label for="person" class="form-label">Proveedor</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="person"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" aria-describedby="person" placeholder="ingrese nit" v-model="snit" @keyup.enter="InputProveedor">
+                                <button class="btn btn-info btn-sm" @click="InputProveedor"> Buscar</button>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <label for="" class="form-label">Nro. de NIT</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
+                                <input type="text" class="form-control" aria-describedby="cantidad" v-model="nit" disabled>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                             <div class="col-md-6">
+                            <label for="" class="form-label">Provedor</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="cantidad"><i class="bi bi-people"></i></span>
+                                <input type="text" class="form-control" aria-describedby="cantidad" v-model="nombreProveedor" disabled>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <label for="person" class="form-label">Nro. de factura</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="person"><i class="bi bi-hash"></i></span>
+                                <input type="number" class="form-control" aria-describedby="person" v-model="nrofac">
+                            </div>
+                            </div>
+                           
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            <label for="person" class="form-label">Cod. de Control</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="person"><i class="bi bi-hash"></i></span>
+                                <input type="text" class="form-control" aria-describedby="person" v-model="codcontrol">
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <label for="" class="form-label">Cod. Autorización</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
+                                <input type="text" class="form-control" aria-describedby="cantidad" v-model="codAutorizacion">
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            <label for="person" class="form-label">fecha</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="person"><i class="bi bi-calendar"></i></span>
+                                <input type="date" class="form-control" aria-describedby="person" v-model="fechafac">
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <label for="" class="form-label">Monto</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
+                                <input type="number" class="form-control" aria-describedby="cantidad" v-model="monto">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                        <button type="button" class="btn btn-primary" @click="guardarCambios()">Guardar</button>
+                        <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                   </div>
-              </div>
               </div>
         </div>
     </div>
@@ -190,11 +222,18 @@ import axios from 'axios';
     const modalpdf = ref(false);
     const pdf = ref('');
     const modaledit = ref(false);
-    const selectbusqueda = ref(0);
-    const arrayActivos = ref([]);
-    const arrayProveedores = ref([]);
-    const arrayPersonales = ref([]);
-  
+    const snit = ref('');
+    const nit = ref('');
+    const nombreProveedor = ref('');
+    const nrofac = ref(0);
+    const codcontrol = ref('');
+    const codAutorizacion = ref('');
+    const fechafac = ref('');
+    const monto = ref(0);
+    const idprovedor = ref(0);
+    const idfactura = ref(0);
+    const num_anual = ref(0);
+    const gestion = ref(0);
     const pagination = reactive({
         total: 0,
         current_page: 1,
@@ -255,33 +294,6 @@ import axios from 'axios';
         maximumFractionDigits: 2
     }).format(value);
     };
-    const listarArticulo = async (page, buscar, criterio) => {
-        try {
-            const response = await axios.get(`/articulos?page=${page}&buscar=${buscar}&criterio=${criterio}`);
-            arrayActivos.value = response.data.articulos.data;
-            Object.assign(pagination, response.data.pagination);
-        } catch (error) {
-            console.error('Error al listar articulos:', error);
-        }
-    };
-    const listarProvedor = async (page, buscar, criterio) => {
-        try {
-            const response = await axios.get(`/provedores?page=${page}&buscar=${buscar}&criterio=${criterio}`);
-            arrayProveedores.value = response.data.provedores.data;
-            Object.assign(pagination, response.data.pagination);
-        } catch (error) {
-            console.error('Error al listar proveedores:', error);
-        }
-    };
-    const listarPersonal = async (page, buscar, criterio) => {
-        try {
-            const response = await axios.get(`/personal?page=${page}&buscar=${buscar}&criterio=${criterio}`);
-            arrayPersonales.value = response.data.personal.data;
-            Object.assign(pagination, response.data.pagination);
-        } catch (error) {
-            console.error('Error al listar personal:', error);
-        }
-    };
     function cerrarModalpdf() {
         modalpdf.value = false;
         pdf.value = '';
@@ -290,50 +302,74 @@ import axios from 'axios';
         if (page === pagination.current_page) return
         obtenerNotas(page,'','');
     };
-    function changePageBusqueda(page){
-        if (selectbusqueda.value==0){
-            if (page === pagination.current_page) return
-            listarArticulo(page,'','');
-        }else{
-            if(selectbusqueda.value==1){
-                if (page === pagination.current_page) return
-                listarProvedor(page,'','');
-            }else{
-                if(selectbusqueda.value==2){
-                    if (page === pagination.current_page) return
-                    listarPersonal(page,'','');
-                }
-            }
-        }
-    };
     function verpdf() {
         modalpdf.value = true;
         pdf.value = `/entradas/pdf?gestion=${gestionSeleccionada.value}`;
     };
     function updatenota(data=[]){
         modaledit.value=true;
-        obtenerActivos(data.numero_anual,data.anio);
+        listarFactura(data.numero_anual,data.anio);
+        idprovedor.value=data.id_provedor;
+        //obtenerActivos(data.numero_anual,data.anio);
     };
-    const obtenerActivos =async(nro,anio)=>{
-        try{
-            const response = await axios.get(`/entradas/items?nro=${nro}&anio=${anio}`);
-            arrayActivos.value = response.data.articulos.data;
-            Object.assign(pagination, response.data.pagination);
-        } catch(e) {
-            console.log(e)
-        }
-
-    };
-    const actualizarentrada=async(data=[])=>{
+    const listarFactura = async (nro, anio) => {
         try {
-            const response = await axios.put('/entradas/actualizar',{
-                'id':data['id'],
-                'cantidad':data['cantidad'],
-                'precio_unitario':data['precio_unitario']
-            })
-            swal.fire(response.data.message,'','success');
+            const response = await axios.get(`/facturas?numeroanual=${nro}&anio=${anio}`);
+            if (!response.data) {
+               limpiarCampos();
+            }else{
+                const factura = response.data;
+                idfactura.value = factura.id;
+                nrofac.value = factura.nro;
+                codcontrol.value = factura.codcontrol;
+                codAutorizacion.value = factura.codautorizacion;
+                fechafac.value = factura.fecha;
+                monto.value = factura.monto;
+                nombreProveedor.value = factura.razon;
+                idprovedor.value = factura.id_provedor;
+                nit.value = factura.nit;
+                num_anual.value = nro;
+                gestion.value = anio;
+            }
         } catch (error) {
-            console.log(error);
+            console.error('Error al obtener la factura:', error);
+        }
+    };
+    function limpiarCampos(){
+        idfactura.value = 0;
+        nrofac.value = 0;
+        codcontrol.value = '';
+        codAutorizacion.value = '';
+        fechafac.value = '';
+        monto.value = 0;
+        nombreProveedor.value = '';
+        nit.value = 0;
+    }
+     const InputProveedor = async () => {
+        try {
+            if (!snit.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Advertencia',
+                    text: 'Por favor, ingrese un NIT de proveedor.',
+                });
+                return;
+            }
+            const response = await axios.get(`/provedores/buscar/${snit.value}`);
+            if (response.data[0]) {
+                const provedor = response.data[0];
+                idprovedor.value=provedor.id;
+                nit.value=provedor.nit;
+                nombreProveedor.value=provedor.nompro;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Proveedor no encontrado',
+                });
+            }
+        } catch (error) {
+            console.error('Error al buscar el proveedor:', error);
         }
     };
      const deletenota = async (nro,anio) => {
@@ -384,7 +420,57 @@ import axios from 'axios';
         modalpdf.value = true;
         pdf.value = '/entradas/entradapdf/'+ data.fecha+ '/' + data.anio + '/' + data.numero_anual;
     };
-    
+    function guardarCambios(){
+        let idfactura_local = idfactura.value;
+        let valores = {
+            id: idfactura_local,
+            nro: nrofac.value,
+            fecha: fechafac.value,
+            codautorizacion: codAutorizacion.value,
+            codcontrol: codcontrol.value,
+            monto: monto.value,
+            nro_anual: num_anual.value,
+            gestion: gestion.value,
+            id_provedor: idprovedor.value,
+        };
+        if(idfactura_local){
+        axios.put('/facturas/actualizar', valores)
+            .then((response) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.data.message,
+                });
+                cerrarModal();
+            }).catch((error) => {
+                console.error('Error al guardar la factura:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo guardar la factura.',
+                });
+                cerrarModal();
+            })
+        }else{
+            axios.post('/facturas/registrar', valores)
+            .then((response) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.data.message,
+                });
+                cerrarModal();
+            }).catch((error) => {
+                console.error('Error al guardar la factura:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo guardar la factura.',
+                });
+                cerrarModal();
+            })
+        }
+    };
     onMounted(() => {
         obtenerGestiones();
         obtenertitulo();

@@ -319,7 +319,7 @@
                                         <th>Stock</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody v-if="arrayActivos.length!=0">
                                     <tr v-for="activo in arrayActivos" :key="activo.id">
                                         <td>
                                             <button type="button" @click="agregarActivo(activo)" class="btn btn-success btn-sm">
@@ -340,6 +340,11 @@
                                             </div>
                                         </td>
                                     </tr>                                
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="4" class="text-center">No se encontraron registros o Articulo sin Stock</td>
+                                    </tr>   
                                 </tbody>
                             </table>
                             <nav v-if="pagination.total > pagination.per_page">
@@ -544,7 +549,7 @@ import axios from 'axios';
     
     const listarArticulo = async (page, buscar, criterio) => {
         try {
-            const response = await axios.get(`/articulos?page=${page}&buscar=${buscar}&criterio=${criterio}`);
+            const response = await axios.get(`/articulos/stock?page=${page}&buscar=${buscar}&criterio=${criterio}`);
             arrayActivos.value = response.data.articulos.data;
             Object.assign(pagination, response.data.pagination);
         } catch (error) {

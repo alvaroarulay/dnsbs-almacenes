@@ -545,13 +545,8 @@ DB::table('personal')->insert(array('codper'=>'FUN-838','nomper'=>'Responsable A
 DB::table('personal')->insert(array('codper'=>'FUN-839','nomper'=>'Responsable Almacen Tarija ','ciper'=>'3130434','telper'=>'4256948','emailper'=>'Lopez@latinmait.com','dirper'=>'C/ N. Aguirre nº 662','id_almacen'=>10));
 
 DB::table('personal')->insert(array('codper'=>'FUN-840','nomper'=>'Responsable Almacen Chuquisaca','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>7));
-
-
-
-
-
-
-
+DB::table('personal')->insert(array('codper'=>'FUN-841','nomper'=>'Responsable Hospital Virgen de Copacabana','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>1));
+DB::table('personal')->insert(array('codper'=>'FUN-842','nomper'=>'Responsable Clinica Dental','ciper'=>'3130435','telper'=>'4256949','emailper'=>'Gomez@latinmait.com','dirper'=>'C/ N. Aguirre nº 663','id_almacen'=>1));
 
 
 }

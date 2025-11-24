@@ -20,16 +20,16 @@
         <li @click="menu=5"><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Proveedores</span></a></li>
         <li @click="menu=6"><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Articulos</span></a></li>
         <li @click="menu=7"><a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Personal</span></a></li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-cash-coin"></i><span class="app-menu__label">&nbsp;&nbsp;Pedidos</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-cash-coin"></i><span class="app-menu__label">&nbsp;&nbsp;Salidas</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li @click="menu=8"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Pedidos</span></a></li>
-            <li @click="menu=12"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Notas de Pedido</span></a></li>
+            <li @click="menu=8"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Salidas</span></a></li>
+            <li @click="menu=12"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Notas de Salida</span></a></li>
           </ul>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-cash-coin"></i><span class="app-menu__label">&nbsp;&nbsp;Compras</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-cash-coin"></i><span class="app-menu__label">&nbsp;&nbsp;Entradas</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li @click="menu=10"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Compras</span></a></li>
-            <li @click="menu=11"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Notas de Compra</span></a></li>
+            <li @click="menu=10"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Entradas</span></a></li>
+            <li @click="menu=11"><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i>Mis Notas de Entrada</span></a></li>
           </ul>
         </li>
         <li @click="menu=13"><a class="app-menu__item" href="#"><i class="bi bi-bar-chart-line-fill"></i><span class="app-menu__label">&nbsp;&nbsp;Reportes</span></a></li>

@@ -260,7 +260,7 @@ class EntradasController extends Controller
             ];
         }
 
-        $titulo = 'Listado de Compras';
+        $titulo = 'Listado de Entradas';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
         $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();

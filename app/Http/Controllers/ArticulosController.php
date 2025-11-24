@@ -95,10 +95,9 @@ class ArticulosController extends Controller
     }
     public function partidas($id){
         $query = Articulos::where('id_partida','=',$id)->count()+1;
-        $codanterior = Articulos::max('cod_anterior')+1;
         $partida = Partidas::where('id', '=', $id)->value('codigo');
         $partidas = $partida . '-' . $query;
-        return response()->json(['partidas'=>$partidas,'codanterior'=>$codanterior]);
+        return response()->json(['partidas'=>$partidas]);
     }
     public function store(Request $request)
     {
@@ -192,17 +191,24 @@ class ArticulosController extends Controller
      */
      public function pdfArticulos(){
         Date::setLocale('es');
-        $fechaTitulo = Date::now()->format('l j F Y');
+        $fechaTitulo = Date::now()->format(' j \\de F \\de Y');
         $fechDerecha = Date::now()->format('d/M/Y');
-        $datos = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+        $datos = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
             ->select(
         'articulos.*',
-        'partidas.nompartida as partida',
         'unidades.nomunidad as unidad',
-        'almacen.nomalmacen as almacen')->where('almacen.seleccionado','=',1)->orderBy('articulos.codigo', 'asc')->get();
-        $titulo = 'Listado de Articulos';
+        'almacen.nomalmacen as almacen',
+        DB::raw('SUM(entradas.restante) as stock'),
+        DB::raw('ROUND(AVG(entradas.precio_unitario),2) as precio_unitario'),
+        DB::raw('ROUND(SUM(entradas.restante * entradas.precio_unitario),2) as total'))
+        ->where('almacen.seleccionado','=',1)
+        ->groupBy('articulos.id','unidades.nomunidad','almacen.nomalmacen')
+        ->havingRaw('SUM(entradas.restante) > 0')
+        ->orderBy('articulos.codigo', 'asc')->get();
+
+        $titulo = 'INVENTARIO ACTUAL';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
         $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();
@@ -217,51 +223,6 @@ class ArticulosController extends Controller
             ]);
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
-     /*   $html = view('plantillapdf.main', [ 'datos' => $datos, 'almacen' => $almacen->nomalmacen, 'establecimiento' => $establecimiento->nomestab ])->render();
-        $headerHtml = view('plantillapdf.header', [
-            'fechaTitulo' => $fechaTitulo,
-            'titulo' => $titulo,
-            'fechaDerecha' => $fechDerecha,
-        ])->render();
-        $footerhtml = view('plantillapdf.footer')->render();
-
-        return Pdf::loadHTML($html)
-            ->setOption('header-html', $headerHtml)
-            ->setOption('footer-html', $footerhtml)
-            ->setOption('margin-top', '40mm') // espacio para el header
-            ->setOption('margin-bottom', '20mm') // espacio para el footer
-            ->setOption('header-spacing', 5)  // espacio entre header y contenido
-            ->setPaper('letter', 'portrait') // tamaño de papel y orientación
-            ->setOption('footer-right', 'Página: [page] de [topage]')
-            ->setOption('footer-font-size', 8)
-            ->inline('documento.pdf');
-
-
-
-        $pdf=Pdf::loadView('plantillapdf.reportearticulos',[
-            'datos'=>$datos,
-            'titulo'=>$titulo,
-            'fechaTitulo'=>$fechaTitulo,
-            'fechaDerecha'=>$fechDerecha,
-            'almacen'=>$almacen ? $almacen->nomalmacen : '',
-            'establecimiento'=>$establecimiento ? $establecimiento->nomestab : '',
-            ])
-        //$pdf->set_paper('letter', 'portrait');
-         ->setOption('enable-local-file-access', true) // ← importante
-        ->setOption('page-size', 'Letter')
-        ->setOption('orientation', 'Portrait');
-        $pdf->setOption('header-html', view('plantillapdf.header', [
-            'fechaTitulo' => $fechaTitulo,
-             'titulo'=>$titulo,
-            'fechaDerecha' => $fechDerecha,
-            'almacen' => $almacen ? $almacen->nomalmacen : '',
-            'establecimiento' => $establecimiento ? $establecimiento->nomestab : '',
-        ])->render());
-       //$pdf->setOption('footer-html', view('plantillapdf.footer'));
-        $pdf->setOption('footer-right', 'Página: [page] de [topage]');
-        $pdf->setOption('footer-font-size', 7);
-
-        return $pdf->stream();
-        */
+     
     }
 }

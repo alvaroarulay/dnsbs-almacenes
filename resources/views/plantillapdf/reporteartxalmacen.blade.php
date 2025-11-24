@@ -77,7 +77,7 @@
                 <tr>
                     <td>
                         <div style="width: 4cm; height: 3cm; text-align: center;">
-                            <img src="{{ asset('img/sistema.png') }}" alt="" style="width: auto; height: 2cm; ">
+                            <img src="img/sistema.png" alt="" style="width: auto; height: 2cm; ">
                             <p style="margin: 0.1cm; text-align: center; font-size: x-small; padding: 0;" ><b>POLICIA BOLIVIANA</b></p>
                             <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;">COMANDO GENERAL</p>
                             <p style="font-size: 5pt; margin: 0; text-align: center; padding: 0;"><b>DIRECCIÓN NACIONAL DE SALUD</b></p>
@@ -89,6 +89,7 @@
                         <div style="width: 9.59cm; height: 1.5cm;">
                             <p style="margin: 0.1cm; text-align: center; padding: 0" ><b>{{$titulo}}</b></p>
                             <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">{{$fechaTitulo}}</p>
+							<p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">(Expresado en Bolvianos)</p>
                         </div>
                     </td>
                     <td>
@@ -129,27 +130,35 @@
 				<p style="font-size: xx-small; margin: 0.1cm;">{{$establecimiento}}</p>
 				</td>
 			</tr>
+			<tr style=" height: .5cm;">
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm; text-align: right;"><b>FINANCIAMIENTO:</b></p>
+				</td>
+				<td >
+				<p style="font-size: xx-small; margin: 0.1cm;">TGN - 11 TGN OTROS</p>
+				</td>
+			</tr>
         </table>
          <table id="customers">
             <thead>
                 <tr style="border: 1px solid ;">
-                    <th style="width: 1cm;">NRO.</th>
-                    <th style="width: 3cm;">CÓDIGO</th>
-					<th style="width: 7cm;">DESCRIPCIÓN</th>
-					<th style="width: 2cm;">UNIDAD</th>
-					<th style="width: 3cm;">PARTIDA</th>
-				  	<th style="width: 3cm;">ALMACEN</th>
+                    <th style="width: 2cm;">CÓDIGO</th>
+					<th style="width: 9cm;">ARTICULO</th>
+					<th style="width: 2cm;">UNIDAD DE MEDIDA</th>
+					<th style="width: 2cm;">RESTANTE</th>
+				  	<th style="width: 2cm;">PRECIO UNITARIO</th>
+					<th style="width: 2cm;">TOTAL</th>
                 </tr>
             </thead>
             <tbody>
             @foreach ($datos as $dato)
                     <tr>
-                        <td>{{$loop->iteration}}</td>
                         <td>{{$dato->codigo}}</td>
 						<td>{{$dato->descripcion}}</td>
 						<td>{{$dato->unidad}}</td>	
-						<td>{{$dato->partida}}</td>
-						<td>{{$dato->almacen}}</td>
+						<td style="text-align: right;">{{$dato->stock}}</td>
+						<td style="text-align: right;">{{number_format($dato->precio_unitario, 2, ',', '.')}}</td>
+						<td style="text-align: right;">{{number_format($dato->total, 2, ',', '.')}}</td>
                     </tr>
             @endforeach
             </tbody>

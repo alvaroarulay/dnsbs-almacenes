@@ -257,7 +257,7 @@ class SalidasController extends Controller
             ];
         }
 
-        $titulo = 'Listado de Pedidos';
+        $titulo = 'Listado de Salidas';
         $almacen = Almacenes::where('seleccionado','=',1)->first();
         $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
         $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();

@@ -73,7 +73,7 @@
                 <tr>
                     <td>
                         <div style="width: 4cm; height: 3cm; text-align: center;">
-                            <img src="{{ asset('img/logoinstitucional.jpg') }}" alt="" style="width: auto; height: 2cm; ">
+                            <img src="img/logoinstitucional.jpg" alt="" style="width: auto; height: 2cm; ">
                             <p style="margin: 0.1cm; text-align: center; font-size: small; padding: 0;" ><b>POLICIA BOLIVIANA</b></p>
                             <p style="font-size: xx-small; margin: 0; text-align: center; padding: 0;">SISTEMA DE ALMACENES</p>
                         </div>

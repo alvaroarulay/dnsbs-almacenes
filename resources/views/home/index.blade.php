@@ -73,10 +73,10 @@
                                 <img src="/img/selabi.png" alt="" style="width: 200px; ">
                             </div>
                         </div>
-                        <div class="card-body">
+                       <div class="card-body">
                             <p><b>Versión:</b> &nbsp; &nbsp;1.0.0.0</p>
-                            <p><b>Copyright:</b> &nbsp; &nbsp;2023</p>
-                            <p><b>Empresa:</b> &nbsp; &nbsp;ARPRO</p>
+                            <p><b>Copyright:</b> &nbsp; &nbsp;2025</p>
+                            <p><b>Empresa:</b> &nbsp; &nbsp;Selabí</p>
                         </div>
                         <div class="card-footer">
                             <p><b>Advertencia:</b> &nbsp; &nbsp; Este programa está protegido por las leyes de propiedad intelectual. La reproducción o distribución ilicita de este programa, esta penado por ley y dará lugar a sanciones civiles y penales.

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
    
-        DB::table('almacen')->insert(array('nomalmacen'=>'ALMACEN CENTTRAL DNSBS','ubi_espec'=>'','id_establecimiento'=>1));
+        DB::table('almacen')->insert(array('nomalmacen'=>'ALMACEN CENTRAL DNSBS','ubi_espec'=>'','id_establecimiento'=>1));
         DB::table('almacen')->insert(array('nomalmacen'=>'Clínica Dental Cnl Roberto Quintanilla','ubi_espec'=>'','id_establecimiento'=>2));
         DB::table('almacen')->insert(array('nomalmacen'=>'HOSPITAL POLICIAL VIRGEN DE COPACABANA 1','ubi_espec'=>'','id_establecimiento'=>9));
         DB::table('almacen')->insert(array('nomalmacen'=>'HOSPITAL POLICIAL VIRGEN DE COPACABANA 1','ubi_espec'=>'','id_establecimiento'=>1));

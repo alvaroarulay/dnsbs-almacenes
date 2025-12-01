@@ -37,8 +37,15 @@ class PersonalController extends Controller
         ];
 
     }
+    public function todos()
+    {
+        $personal = Personal::join('almacen', 'personal.id_almacen', '=', 'almacen.id')
+            ->select('personal.*', 'almacen.nomalmacen as almacen')->get();
+        return ['personal' => $personal];
+
+    }
     public function buscar($cod){
-      return response()->json(Personal::where('codper','=',$cod)->get());
+      return response()->json(Personal::where('id','=',$cod)->get());
     }
      public function codigoper(){
         $id = Personal::max('id');

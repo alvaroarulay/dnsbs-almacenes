@@ -46,34 +46,18 @@ class ArticulosController extends Controller
         ];
        
     }
-     public function stock(Request $request)
+     public function stock()
     {
-        $buscar = $request->buscar;
-        $criterio = $request->criterio;
-        $query = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+        $articulos = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
                             ->join('entradas', 'articulos.id', '=', 'entradas.id_articulo')
-            ->select('articulos.*','partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',DB::raw('sum(entradas.restante) as stock'),
+            ->select('articulos.*',DB::raw("CONCAT(articulos.codigo, ' - ', articulos.descripcion) as descrip"),'partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',DB::raw('sum(entradas.restante) as stock'),
                     'almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
             ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id')
             ->havingRaw('SUM(entradas.restante) > 0')
-            ->orderBy('articulos.codigo', 'asc');
-        
-        if ($buscar=='') {
-            $articulos = $query->paginate(10);
-        } else {
-            $articulos = $query->where('articulos.'.$criterio, 'like', '%' . $buscar . '%')->paginate(10);
-        }
+            ->orderBy('articulos.codigo', 'asc')->get();
         return [
-            'pagination' => [
-                'total'         => $articulos->total(),
-                'current_page'  => $articulos->currentPage(),
-                'per_page'      => $articulos->perPage(),
-                'last_page'     => $articulos->lastPage(),
-                'from'          => $articulos->firstItem(),
-                'to'            => $articulos->lastItem(),
-            ],
             'articulos' => $articulos
         ];
        
@@ -105,11 +89,10 @@ class ArticulosController extends Controller
             $almacen = Almacenes::where('seleccionado','=',1)->first();
             $this->validate($request, [
                 'codigo' => 'required|unique:articulos,codigo',
-                'codanterior' => 'required|max:100',
                 'descripcion' => 'required|max:255',
             ]);
             $articulo = new Articulos();
-            $articulo->cod_anterior = $request->codanterior;
+            $articulo->cod_anterior = '';
             $articulo->codigo = $request->codigo;
             $articulo->descripcion = $request->descripcion;
             $articulo->fecha_expiracion = $request->fecha_expiracion;
@@ -139,7 +122,6 @@ class ArticulosController extends Controller
                 return response()->json(['message' => 'ID de articulo no proporcionado'], 400);
             }
             $articulo = Articulos::findOrFail($request->id);
-            $articulo->cod_anterior = $request->codanterior;
             $articulo->codigo = $request->codigo;
             $articulo->descripcion = $request->descripcion;
             $articulo->fecha_expiracion = $request->fecha_expiracion;

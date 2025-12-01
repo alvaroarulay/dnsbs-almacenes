@@ -19,6 +19,8 @@ import compras from './components/compras.vue';
 import notasentrega from './components/notaentrega.vue';
 import notasalida from './components/notasalida.vue';
 import reporte from './components/reportes.vue';
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
 
 const app = createApp({ 
   setup() {
@@ -47,6 +49,7 @@ app.component('compras',compras);
 app.component('notaentrega',notasentrega);
 app.component('notasalida',notasalida);
 app.component('reportes',reporte);
+app.component("v-select",vSelect);
 app.use().mount('#app')
   
 

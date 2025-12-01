@@ -8,7 +8,7 @@
       </div>
       <template v-if="!newpedido">
         <div class="tile">
-            <h3 class="tile-title">Pedidos</h3>
+            <h3 class="tile-title">Salidas</h3>
             <div class="row mb-3">
                 <div class="col-md-4 col-md-offset-3 justify-content-start">
                     <button class="btn btn-primary" @click="addPedido"><i class="bi bi-plus"></i>Nuevo</button>&nbsp;&nbsp;&nbsp;
@@ -79,25 +79,21 @@
             <div class="card border-primary mb-3">
                 <div class="card-header text-bg-primary mb-3">Articulos</div>
 
-                <div class="card-body text-primary">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
+                <div class="card-body text-primary mb-3">
                           <label for="articulos" class="form-label">Busqueda</label>
-                          <div class="input-group">
-                            <span class="input-group-text" id="almacen"><i class="bi bi-search"></i></span>
-                            <input autofocus class="form-control" aria-describedby="almacen" placeholder="ingrese un codigo" @keyup.enter="inputArticulo(codart)" v-model="codart">
-                            <button class="btn btn-info btn-sm" @click="buscarArticulo">Buscar</button>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <label for="" class="form-label">Código</label>
+                            <v-select
+                                  :options="arrayActivos" 
+                                    v-model="activoseleccionado" 
+                                    label="descrip" 
+                                    @update:modelValue="inputArticulo(activoseleccionado.codigo)"
+                                    >   
+                            </v-select>
+                    <div class="row">
+                        <label for="" class="form-label">Código</label>
                           <div class="input-group">
                             <span class="input-group-text" id="codigo"><i class="bi bi-upc"></i></span>
                             <input type="text" class="form-control" aria-describedby="codigo" v-model="codigoArticulo" disabled>
                           </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <label for="" class="form-label">Descripción</label>
                         <div class="input-group mb-3 ">
                             <span class="input-group-text" id="descripcion"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-alphabet-uppercase" viewBox="0 0 16 16">
@@ -151,39 +147,29 @@
               
                 <div class="card-header text-bg-info mb-3">Pedido</div>
                 <div class="card-body text-primary">
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                          <label for="person" class="form-label">Personal</label>
-                          <div class="input-group">
-                            <span class="input-group-text" id="person"><i class="bi bi-search"></i></span>
-                            <input type="text" class="form-control" aria-describedby="person" placeholder="ingrese ci" v-model="codpersonal" @keyup.enter="inputPersonal">
-                            <button class="btn btn-info btn-sm" @click="buscarPersonal">Buscar</button>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <label for="" class="form-label">Carnet de Identidad</label>
-                          <div class="input-group">
-                            <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
-                            <input type="text" class="form-control" aria-describedby="cantidad" v-model="carnetIdentidad" disabled>
-                          </div>
-                        </div>
+                    <label for="person" class="form-label">Personal</label>
+                        <v-select
+                            :options="arrayPersonales" 
+                            v-model="personalseleccionado" 
+                            label="nomper" 
+                            @update:modelValue="inputPersonal(personalseleccionado.id)"
+                            >   
+                    </v-select>
+                    <label for="" class="form-label">Carnet de Identidad</label>
+                    <div class="input-group">
+                    <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
+                    <input type="text" class="form-control" aria-describedby="cantidad" v-model="carnetIdentidad" disabled>
                     </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="" class="form-label">Fecha</label>
-                            <div class="input-group">
-                                <span class="input-group-text" id="fecha"><i class="bi bi-calendar"></i></span>
-                                <input type="date" class="form-control" aria-describedby="fecha" v-model="fecha">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                           <label for="" class="form-label">Nombre</label>
+                    <label for="" class="form-label">Nombre</label>
                             <div class="input-group ">
                                 <span class="input-group-text" id="name"><i class="bi bi-person"></i></span>
                                 <input type="text" class="form-control" aria-describedby="name" v-model="nombrePersonal" disabled>
                             </div> 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Fecha</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="fecha"><i class="bi bi-calendar"></i></span>
+                            <input type="date" class="form-control" aria-describedby="fecha" v-model="fecha">
                         </div>
                     </div>
                 </div>
@@ -282,125 +268,6 @@
             </div>
             <!-- /.modal-dialog -->
     </div>
-    
-    <div class="modal fade" tabindex="-1" :class="{'mostrar' : modalbusqueda}" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll;" >
-          <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h4 class="modal-title"> {{ tituloModalActivo }}</h4>
-                      <button type="button" class="close btn btn-danger" @click="cerrarModal()" aria-label="Close" >
-                      <span aria-hidden="true">×</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">  
-                        <div class="input-group mb-3" v-if="selectbusqueda==0">
-                            <select class="form-select col-md-3" v-model="criterio">
-                                <option value="codigo">Código</option>
-                                <option value="descripcion">Descripción</option>
-                            </select>
-                            <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                            <button type="submit" @click="listarArticulo(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                        </div>
-                        <div class="input-group mb-3" v-else-if="selectbusqueda==2">
-                            <select class="form-select col-md-3" v-model="criterio">
-                                <option value="ciper">Carnet</option>
-                                <option value="nomper">Nombre</option>
-                            </select>
-                            <input type="text" v-model="buscar" @keyup.enter="listarPersonal(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                            <button type="submit" @click="listarPersonal(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                      </div>
-                      <div class="table-responsive" v-if="selectbusqueda==0">
-                            <table class="table table-bordered table-striped table-sm">
-                                <thead>
-                                    <tr class="table-secondary">
-                                        <th>Seleccionar</th>
-                                        <th>Código</th>
-                                        <th>Descripción</th>
-                                        <th>Stock</th>
-                                    </tr>
-                                </thead>
-                                <tbody v-if="arrayActivos.length!=0">
-                                    <tr v-for="activo in arrayActivos" :key="activo.id">
-                                        <td>
-                                            <button type="button" @click="agregarActivo(activo)" class="btn btn-success btn-sm">
-                                            <i class="bi bi-check"></i>
-                                            </button>
-                                        </td>
-                                        <td v-text="activo.codigo"></td>
-                                        <td v-text="activo.descripcion"></td>
-                                        <td >
-                                            <div class="bs-component" v-if="activo.stock==0">
-                                                <span class="me-1 badge badge-pill bg-danger">{{activo.stock}}</span>
-                                            </div>
-                                            <div class="bs-component" v-else-if="activo.stock>0 && activo.stock<50">
-                                                <span class="me-1 badge badge-pill bg-warning">{{activo.stock}}</span>
-                                            </div>
-                                            <div class="bs-component" v-else>
-                                                <span class="me-1 badge badge-pill bg-success">{{activo.stock}}</span>  
-                                            </div>
-                                        </td>
-                                    </tr>                                
-                                </tbody>
-                                <tbody v-else>
-                                    <tr>
-                                        <td colspan="4" class="text-center">No se encontraron registros o Articulo sin Stock</td>
-                                    </tr>   
-                                </tbody>
-                            </table>
-                            <nav v-if="pagination.total > pagination.per_page">
-                                <ul class="pagination">
-                                    <li class="page-item"
-                                    v-for="page in pagesNumber" 
-                                    :key="page" 
-                                    :class="{ active: page === pagination.current_page }"
-                                    >
-                                    <a class="page-link" href="#" @click.prevent="changePageBusqueda(page)">{{ page }}</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                      </div>
-                      <div class="table-responsive" v-else-if="selectbusqueda==2">
-                          <table class="table table-bordered table-striped table-sm">
-                              <thead>
-                                  <tr class="table-secondary">
-                                      <th>Seleccionar</th>
-                                      <th>Código</th>
-                                      <th>Carnet</th>
-                                      <th>Nombre</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr v-for="personal in arrayPersonales" :key="personal.id">
-                                      <td>
-                                          <button type="button" @click="agregarPersonal(personal)" class="btn btn-success btn-sm">
-                                          <i class="bi bi-check"></i>
-                                          </button>
-                                      </td>
-                                      <td v-text="personal.codper"></td>
-                                      <td v-text="personal.ciper"></td>
-                                      <td v-text="personal.nomper"></td>
-                                  </tr>                                
-                              </tbody>
-                          </table>
-                            <nav v-if="pagination.total > pagination.per_page">
-                                <ul class="pagination">
-                                    <li class="page-item"
-                                    v-for="page in pagesNumber" 
-                                    :key="page" 
-                                    :class="{ active: page === pagination.current_page }"
-                                    >
-                                    <a class="page-link" href="#" @click.prevent="changePageBusqueda(page)">{{ page }}</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                      </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                  </div>
-              </div>
-              </div>
-        </div>
-    </div>
     </main>
 </template>
 <script setup>
@@ -422,12 +289,8 @@ import axios from 'axios';
     const codpersonal = ref('');
     const carnetIdentidad = ref('');
     const nombrePersonal = ref('');
-    const modalbusqueda = ref(false);
-    const selectbusqueda = ref(0);
-    const tituloModalActivo = ref('');
     const arrayActivos = ref([]);
     const arrayPersonales = ref([]);
-    const codart = ref('');
     const unidad = ref('');
     const arrayPedido = ref([]);
     const updpedido=ref(null);
@@ -440,6 +303,8 @@ import axios from 'axios';
     const anio = ref(0);
     const numeroanual = ref(0);
     const fecha = ref('');
+    const activoseleccionado = ref(null);
+    const personalseleccionado = ref(null);
     
     
     const idpersonal = ref(0);
@@ -483,14 +348,6 @@ import axios from 'axios';
         } catch (error) {
             console.error('Error al obtener las salidas:', error);
         }
-    };
-    function buscarArticulo() {
-        criterio.value = 'codigo';
-        buscar.value='';
-        modalbusqueda.value = true;
-        selectbusqueda.value = 0;
-        tituloModalActivo.value = 'Buscar Articulo';
-        listarArticulo(1, buscar.value, criterio.value);
     };
     const inputArticulo = async (codart) => {
         try {
@@ -540,18 +397,12 @@ import axios from 'axios';
                 stock.value = 0;
                 cantidad.value = '';
     };
-    }
-    function agregarActivo(data=[]){
-        inputArticulo(data.codigo);
-        buscar.value='';
-        modalbusqueda.value=false;
     };
-    
-    const listarArticulo = async (page, buscar, criterio) => {
+    const listarArticulo = async () => {
         try {
-            const response = await axios.get(`/articulos/stock?page=${page}&buscar=${buscar}&criterio=${criterio}`);
-            arrayActivos.value = response.data.articulos.data;
-            Object.assign(pagination, response.data.pagination);
+            const response = await axios.get(`/articulos/stock`);
+            console.log(response);
+            arrayActivos.value = response.data.articulos;
         } catch (error) {
             console.error('Error al listar articulos:', error);
         }
@@ -560,75 +411,34 @@ import axios from 'axios';
         let parcial = stock-cantidad;
         return parcial;
     };
-    function buscarPersonal() {
-        criterio.value = 'ciper';
-        buscar.value='';
-        modalbusqueda.value = true;
-        selectbusqueda.value = 2;
-        tituloModalActivo.value = 'Buscar Personal';
-        listarPersonal(1, buscar.value, criterio.value);
-    };
-    const listarPersonal = async (page, buscar, criterio) => {
+    const listarPersonal = async () => {
         try {
-            const response = await axios.get(`/personal?page=${page}&buscar=${buscar}&criterio=${criterio}`);
-            arrayPersonales.value = response.data.personal.data;
-            Object.assign(pagination, response.data.pagination);
+            const response = await axios.get(`/personal/todos`);
+            arrayPersonales.value = response.data.personal;
         } catch (error) {
             console.error('Error al listar personal:', error);
         }
     };
-    const inputPersonal = async () => {
+    const inputPersonal = async (idper) => {
         try {
-            if (!codpersonal.value) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Advertencia',
-                    text: 'Por favor, ingrese un carnet de Identidad.',
-                });
-                return;
-            }
-            const response = await axios.get(`/personal/buscar/${codpersonal.value}`);
+            const response = await axios.get(`/personal/buscar/${idper}`);
+            console.log(response);
             if (response.data[0]) {
-                const articulo = response.data[0];
-                idpersonal.value=articulo.id;
-                carnetIdentidad.value = articulo.ciper;
-                nombrePersonal.value = articulo.nomper;
+                const persona = response.data[0];
+                idpersonal.value=persona.id;
+                carnetIdentidad.value = persona.ciper;
+                nombrePersonal.value = persona.nomper;
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Artículo no encontrado',
+                    text: 'Responsable no encontrado',
 
                 });
             }
         } catch (error) {
             console.error('Error al buscar el artículo:', error);
         }
-    };
-     function changePageBusqueda(page){
-        if (selectbusqueda.value==0){
-            if (page === pagination.current_page) return
-            listarArticulo(page,'','');
-        }else{
-            if(selectbusqueda.value==1){
-                if (page === pagination.current_page) return
-                listarProvedor(page,'','');
-            }else{
-                if(selectbusqueda.value==2){
-                    if (page === pagination.current_page) return
-                    listarPersonal(page,'','');
-                }
-            }
-        }
-    };
-    function agregarPersonal(data=[]){
-        idpersonal.value=data.id;
-        carnetIdentidad.value=data.ciper;
-        nombrePersonal.value=data.nomper;
-        modalbusqueda.value=false;
-    };
-    function cerrarModal() {
-        modalbusqueda.value = false;
     };
     function cerrarModalpdf() {
         modalpdf.value = false;
@@ -641,6 +451,8 @@ import axios from 'axios';
     function addPedido() {
         newpedido.value = true;
         fecha.value = new Date().toISOString().split('T')[0];
+        listarArticulo();
+        listarPersonal();
     };
     function cerrarNuevo() {
         newpedido.value = false;

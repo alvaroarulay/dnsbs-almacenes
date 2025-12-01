@@ -111,6 +111,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/articulos/buscar/{cod}','ArticulosController@buscar');
 
         Route::get('/personal','PersonalController@index');
+        Route::get('/personal/todos','PersonalController@todos');
         Route::post('/personal/registrar','PersonalController@store');
         Route::delete('/personal/eliminar/{id}','PersonalController@destroy');
         Route::put('/personal/actualizar','PersonalController@update');

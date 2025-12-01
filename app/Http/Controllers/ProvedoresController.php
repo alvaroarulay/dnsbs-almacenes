@@ -42,10 +42,7 @@ class ProvedoresController extends Controller
         try {
             $this->validate($request, [
                 'nompro' => 'nullable|max:50',
-                'nit' => 'nullable|max:20',
-                'telefono' => 'nullable|max:20',
-                'direccion' => 'nullable|max:100',
-                'email' => 'nullable|email|max:50'
+                'nit' => 'nullable|max:20'
             ]);
         
             $provedor = new Provedores();

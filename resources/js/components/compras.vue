@@ -8,7 +8,7 @@
       </div>
       <template v-if="!newcompra">
         <div class="tile">
-            <h3 class="tile-title">Compras</h3>
+            <h3 class="tile-title">Entradas</h3>
             <div class="row mb-3">
                 <div class="col-md-4 col-md-offset-3 justify-content-start">
                     <button class="btn btn-primary" @click="addCompra"><i class="bi bi-plus"></i>Nuevo</button>&nbsp;&nbsp;&nbsp;

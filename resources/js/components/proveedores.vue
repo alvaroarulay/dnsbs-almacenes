@@ -386,40 +386,10 @@ import axios from 'axios';
             errorMostrarMsjProvedor.value.push("Nombre del Provedor vacío o incorrecto")
         }
         if (
-            !direccion.value ||
-            !validText.test(direccion.value)
-        ) {
-            errorMostrarMsjProvedor.value.push("Dirección vacía o incorrecta")
-        }
-        if (
-            !telefono.value ||
-            !validPhone.test(telefono.value)
-        ) {
-            errorMostrarMsjProvedor.value.push("Teléfono vacío o incorrecto")
-        }
-        if (
             !nit.value ||
             !validText.test(nit.value)
         ) {
             errorMostrarMsjProvedor.value.push("NIT vacío o incorrecto")
-        }
-        if (
-            !email.value ||
-            !validEmail.test(email.value)
-        ) {
-            errorMostrarMsjProvedor.value.push("E-mail vacío o incorrecto")
-        }
-        if (
-            !contacto.value ||
-            !validText.test(contacto.value)
-        ) {
-            errorMostrarMsjProvedor.value.push("Contacto vacío o incorrecto")
-        }
-        if (
-            !observ.value ||
-            !validText.test(observ.value)
-        ) {
-            errorMostrarMsjProvedor.value.push("Observación vacía o incorrecta")
         }
         if (errorMostrarMsjProvedor.value.length) {
             errorProvedor.value = 1

@@ -242,7 +242,6 @@ import axios from 'axios';
     const criterio = ref('codigo');
     const modalpdf = ref(false);
     const pdf = ref('');
-    const codanterior = ref('');
     const codigo = ref(''); 
     const descripcion = ref('');
     const newArticulo = ref(0);
@@ -305,7 +304,6 @@ import axios from 'axios';
         try {
         if (validarArticulo()) {return;}
             const response = await axios.post('/articulos/registrar', {
-                codanterior: codanterior.value,
                 codigo: codigo.value,
                 descripcion: descripcion.value,
                 fecha_expiracion: fechaExpiracion.value,
@@ -335,7 +333,6 @@ import axios from 'axios';
             if (validarArticulo()) {return;}
             const response = await axios.put('/articulos/actualizar', {
                 id: idarticulo.value,
-                codanterior: codanterior.value,
                 codigo: codigo.value,
                 descripcion: descripcion.value,
                 fecha_expiracion: fechaExpiracion.value,
@@ -381,7 +378,6 @@ import axios from 'axios';
         newArticulo.value = 0;
         editArticulo.value = 1;
         idarticulo.value = articulo.id;
-        codanterior.value = articulo.cod_anterior;
         codigo.value = articulo.codigo;
         descripcion.value = articulo.descripcion;
         nompartida.value = articulo.partida_nombre;
@@ -404,7 +400,6 @@ import axios from 'axios';
         unidadseleccionada.value = 0;
         errorArticulo.value = 0;
         errorMostrarMsjArticulo.value = [];
-        codanterior.value = '';
         codigo.value = '';
         descripcion.value = '';
         fechaExpiracion.value = '';
@@ -422,12 +417,6 @@ import axios from 'axios';
         errorMostrarMsjArticulo.value = []
         const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-]+$/
 
-        if (
-            !codanterior.value ||
-            !validText.test(codanterior.value)
-        ) {
-            errorMostrarMsjArticulo.value.push("el Código esta vacío o incorrecto")
-        }
         if (
             !codigo.value ||
             !validText.test(codigo.value)
@@ -515,7 +504,6 @@ import axios from 'axios';
 
         axios.get(url).then((response)=>{
             codigo.value = response.data.partidas;
-            codanterior.value = response.data.codanterior;
         })
         .catch(function (error) {
             console.log(error);

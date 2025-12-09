@@ -34,6 +34,10 @@ class ProvedoresController extends Controller
         ];
        
     }
+    public function provedores(Request $request)
+    {
+        return response()->json(Provedores::all());
+    }
     public function buscar($nit){
       return response()->json(Provedores::where('nit','=',$nit)->get());
     }
@@ -54,7 +58,7 @@ class ProvedoresController extends Controller
             $provedor->email = $request->email;
             $provedor->observaciones = $request->observ;
             $provedor->save();
-            return response()->json(['message' => 'Provedor guardado correctamente!']);
+            return response()->json(['message' => 'Provedor guardado correctamente!','id'=>$provedor->id]);
        } catch (Exception $e) {
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
         }
@@ -72,7 +76,7 @@ class ProvedoresController extends Controller
             $provedor->email = $request->email;
             $provedor->observaciones = $request->observ;
             $provedor->save();
-            return response()->json(['message' => 'Provedor actualizado correctamente!']);
+            return response()->json(['message' => 'Provedor actualizado correctamente!','id'=>$provedor->id]);
 
         }  catch (Exception $e) {
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);

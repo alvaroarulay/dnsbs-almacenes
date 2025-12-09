@@ -65,9 +65,6 @@ class PersonalController extends Controller
                 'codper' => 'required|max:50',
                 'nomper' => 'required|max:50',
                 'ciper' => 'required|max:20',
-                'telper' => 'nullable|max:20',
-                'dirper' => 'nullable|max:100',
-                'emailper' => 'nullable|email|max:50'
             ]);
             $personal = new Personal();
             $personal->codper = $request->codper;
@@ -79,7 +76,7 @@ class PersonalController extends Controller
             $personal->cargo = $request->cargo;
             $personal->id_almacen = $almacen->id;
             $personal->save();
-            return response()->json(['message' => 'Personal guardado correctamente!']);
+            return response()->json(['message' => 'Personal guardado correctamente!','id_personal'=>$personal->id]);
          } catch (\Illuminate\Database\QueryException $e) {
             $errorMessage = $e->getMessage();
             if (strpos($errorMessage, 'foreign key constraint fails') !== false) {
@@ -109,7 +106,7 @@ class PersonalController extends Controller
             $personal->cargo = $request->cargo;
             $personal->id_almacen = 1;
             $personal->save();
-            return response()->json(['message' => 'Personal actualizado correctamente!']);
+            return response()->json(['message' => 'Personal actualizado correctamente!','id_personal'=>$personal->id]);
         } catch (\Illuminate\Database\QueryException $e) {
             $errorMessage = $e->getMessage();
             if (strpos($errorMessage, 'foreign key constraint fails') !== false) {

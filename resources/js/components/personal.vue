@@ -414,28 +414,10 @@ import axios from 'axios';
             errorMostrarMsjPersonal.value.push("Nombre del Personal esta vacío o incorrecto")
         }
         if (
-            !dirper.value ||
-            !validText.test(dirper.value)
-        ) {
-            errorMostrarMsjPersonal.value.push("Dirección vacía o incorrecta")
-        }
-        if (
-            !telper.value ||
-            !validnumber.test(telper.value)
-        ) {
-            errorMostrarMsjPersonal.value.push("Teléfono vacío o incorrecto")
-        }
-        if (
             !ciper.value ||
             !validnumber.test(ciper.value)
         ) {
             errorMostrarMsjPersonal.value.push("carnet vacío o incorrecto")
-        }
-        if (
-            !emailper.value ||
-            !validEmail.test(emailper.value)
-        ) {
-            errorMostrarMsjPersonal.value.push("E-mail vacío o incorrecto")
         }
          if (
             !cargo.value ||

@@ -25,8 +25,9 @@ class EntradasController extends Controller
             ->join('almacen','articulos.id_almacen','=','almacen.id')
             ->join('personal', 'entradas.id_personal', '=', 'personal.id')
             ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
-            ->select('entradas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor')
-            ->where('almacen.seleccionado','=',1);
+            ->leftJoin('documentos','entradas.id','=','producto_id')
+            ->select('entradas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor','documentos.ruta')
+            ->where('almacen.seleccionado','=',1)->orderby('entradas.created_at','desc');
         if ($buscar=='') {
             $entradas = $query->paginate(10);
         } else {
@@ -122,7 +123,7 @@ class EntradasController extends Controller
                 $entrada->id_articulo = $compra['idarticulo'];
                 $entrada->anio = $anioActual;
                 $entrada->numero_anual = $ultimoNumero ? $ultimoNumero + 1 : 1; 
-                $entrada->id_personal = $request->idpersonal;
+                $entrada->id_personal = \Auth::id();
                 $entrada->id_proveedor = $request->idprovedor;
                 $entrada->save();
             }
@@ -139,7 +140,7 @@ class EntradasController extends Controller
                 $factura->id_provedor = $request->idprovedor;
                 $factura->save();
             }
-             return response()->json(['message' => 'Datos Guardados! ','numero_anual' => $entrada->numero_anual, 'anio' => $anioActual], 200);
+             return response()->json(['message' => 'Datos Guardados! ','numero_anual' => $entrada->numero_anual, 'anio' => $anioActual,'id'=>$entrada->id], 200);
         }catch(\Exception $e){
             return response()->json(['error' => 'Error al registrar la entrada: ' . $e->getMessage()], 500);
         }

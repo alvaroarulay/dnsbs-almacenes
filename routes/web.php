@@ -95,6 +95,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/unidades/pdf','UnidadesController@pdfUnidades');
 
         Route::get('/provedores','ProvedoresController@index');
+        Route::get('/provedores/todos','ProvedoresController@provedores');
         Route::post('/provedores/registrar','ProvedoresController@store');
         Route::delete('/provedores/eliminar/{id}','ProvedoresController@destroy');
         Route::put('/provedores/actualizar','ProvedoresController@update');
@@ -103,6 +104,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
         Route::get('/articulos','ArticulosController@index');
         Route::get('/articulos/stock','ArticulosController@stock');
+        Route::get('/articulos/stock_entradas','ArticulosController@stock_entradas');
         Route::post('/articulos/registrar','ArticulosController@store');
         Route::delete('/articulos/eliminar/{id}','ArticulosController@destroy');
         Route::put('/articulos/actualizar','ArticulosController@update');
@@ -151,6 +153,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/facturas','FacturasController@index');
         Route::post('/facturas/registrar','FacturasController@store');
         Route::put('/facturas/actualizar','FacturasController@update');
+
+        Route::post('/documentos/guardar','DocumentosController@guardar');
+
+        
         });
     });
 

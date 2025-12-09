@@ -62,35 +62,53 @@ class ArticulosController extends Controller
         ];
        
     }
+    public function stock_entradas()
+    {
+        $articulos = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
+                            ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
+            ->select('articulos.*',DB::raw("CONCAT(articulos.codigo, ' - ', articulos.descripcion) as descrip"),'partidas.nompartida as partida_nombre','unidades.nomunidad as unidad_nombre',
+                    'partidas.id as id_partida','unidades.id as id_unidad')
+            ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','partidas.id','unidades.id')
+            ->orderBy('articulos.codigo', 'asc')->get();
+        return [
+            'articulos' => $articulos
+        ];
+       
+    }
     public function buscar($cod){
         $anio =  date('Y');
         try{
             $articulo = Articulos::join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
             ->select('articulos.*','unidades.nomunidad as unidad_nombre')
-            ->where('codigo','=',$cod)->get();
+            ->where('codigo','=',$cod)->first();
             if($articulo->count()==0){
                 return response()->json(['message'=>'No se encontro Articulo']); 
             }
-            $stock = Entradas::select('restante')->where('id_articulo','=',$articulo[0]->id)->where('anio','=',$anio)->sum('restante');
+            $stock = Entradas::select('restante')->where('id_articulo','=',$articulo->id)->where('anio','=',$anio)->sum('restante');
             return response()->json(['articulo'=>$articulo,'stock'=>$stock]);  
         }catch(Exception $e){
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
         }
     }
     public function partidas($id){
-        $query = Articulos::where('id_partida','=',$id)->count()+1;
+        $query = Articulos::where('id_partida', $id)
+                        ->selectRaw('MAX(RIGHT(codigo, 5)) as maximo')
+                        ->value('maximo') + 1;
+
         $partida = Partidas::where('id', '=', $id)->value('codigo');
-        $partidas = $partida . '-' . $query;
+       if ($query < 1000) {
+            $correlativo = str_pad($query, 3, '0', STR_PAD_LEFT); // 3 dígitos
+            $partidas = $partida . '-00' . $correlativo;
+        } else {
+            $correlativo = str_pad($query, 4, '0', STR_PAD_LEFT); // 4 dígitos
+            $partidas = $partida . '-0' . $correlativo;
+        }
         return response()->json(['partidas'=>$partidas]);
     }
     public function store(Request $request)
     {
         try {
             $almacen = Almacenes::where('seleccionado','=',1)->first();
-            $this->validate($request, [
-                'codigo' => 'required|unique:articulos,codigo',
-                'descripcion' => 'required|max:255',
-            ]);
             $articulo = new Articulos();
             $articulo->cod_anterior = '';
             $articulo->codigo = $request->codigo;
@@ -100,17 +118,8 @@ class ArticulosController extends Controller
             $articulo->id_unidad = $request->unidad_id;
             $articulo->id_almacen = $almacen->id;
             $articulo->save();
-            return response()->json(['message' => 'Articulo guardado correctamente!']);
-         } catch (\Illuminate\Database\QueryException $e) {
-            $errorMessage = $e->getMessage();
-            if (strpos($errorMessage, 'foreign key constraint fails') !== false) {
-                return response()->json(['message' => 'No se puede eliminar porque está siendo utilizado en otra tabla.']);
-            }
-            if ($e->getCode() == 1451) {
-                return response()->json(['message' => 'No se puede eliminar porque está siendo utilizado en otra tabla.']);
-            }
-            return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
-        } catch (Exception $e) {
+            return response()->json(['message' => 'Articulo guardado correctamente!','id'=>$articulo->id]);
+         }  catch (Exception $e) {
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
         }
     }
@@ -128,17 +137,8 @@ class ArticulosController extends Controller
             $articulo->id_partida = $request->partida_id;
             $articulo->id_unidad = $request->unidad_id;
             $articulo->save();
-            return response()->json(['message' => 'Articulo actualizado correctamente!']);
-        } catch (\Illuminate\Database\QueryException $e) {
-            $errorMessage = $e->getMessage();
-            if (strpos($errorMessage, 'foreign key constraint fails') !== false) {
-                return response()->json(['message' => 'No se puede eliminar porque está siendo utilizado en otra tabla.']);
-            }
-            if ($e->getCode() == 1451) {
-                return response()->json(['message' => 'No se puede eliminar porque está siendo utilizado en otra tabla.']);
-            }
-            return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
-        } catch (Exception $e) {
+            return response()->json(['message' => 'Articulo actualizado correctamente!','id'=>$articulo->id]);
+        }  catch (Exception $e) {
             return response()->json(['message' => 'Excepción capturada: ' . $e->getMessage()]);
         }
     }

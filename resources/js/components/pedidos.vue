@@ -77,17 +77,17 @@
         <div class="row">
         <div class="col-md-6">
             <div class="card border-primary mb-3">
-                <div class="card-header text-bg-primary mb-3">Articulos</div>
-
+                <div class="card-header text-bg-primary mb-3">Articulos
+                </div>
                 <div class="card-body text-primary mb-3">
-                          <label for="articulos" class="form-label">Busqueda</label>
-                            <v-select
-                                  :options="arrayActivos" 
-                                    v-model="activoseleccionado" 
-                                    label="descrip" 
-                                    @update:modelValue="inputArticulo(activoseleccionado.codigo)"
-                                    >   
-                            </v-select>
+                    <label for="articulos" class="form-label">Busqueda</label>
+                    <v-select
+                            :options="arrayActivos" 
+                            v-model="activoseleccionado" 
+                            label="descrip" 
+                            @update:modelValue="inputArticulo" 
+                            >   
+                    </v-select>
                     <div class="row">
                         <label for="" class="form-label">Código</label>
                           <div class="input-group">
@@ -125,8 +125,6 @@
                         </div>
                     </div>
                     </div>
-
-                 
                 </div>
                 <div class="card-footer">
                     <div v-if="errorpedido" class="alert alert-danger">
@@ -143,44 +141,70 @@
             </div>
         </div>
         <div class="col-md-6">
-          <div class="card border-info mb-3">
+          <div class="tile">
               
-                <div class="card-header text-bg-info mb-3">Pedido</div>
-                <div class="card-body text-primary">
-                    <label for="person" class="form-label">Personal</label>
+                <div class="tile-title-w-btn">
+                    <h3 class="title">Personal</h3>
+                    <div class="btn-group text-end">
+                            <button class="btn btn-primary" href="#" @click="newpersonal()" v-if="newper==0"><i class="bi bi-plus-square fs-5"></i></button>
+                            <button class="btn btn-success" href="#" @click="savepersonal()" v-if="newper==1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                            <path d="M11 2H9v3h2z"/>
+                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                            </svg></button>
+                            <button class="btn btn-warning" href="#" @click="editarpersonal()" v-if="newper==0"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-success" href="#" @click="updatepersonal()" v-if="newper==2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                            <path d="M11 2H9v3h2z"/>
+                            <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                            </svg></button>
+                            <button class="btn btn-danger" href="#" @click="cancelarpersonal()" v-if="newper==1 || newper==2"><i class="bi bi-x-circle"></i></button>
+                    </div> </div>
+                <div class="tile-body text-primary">
+                    <label for="person" class="form-label" v-if="newper==0">Busqueda</label>
                         <v-select
                             :options="arrayPersonales" 
                             v-model="personalseleccionado" 
                             label="nomper" 
                             @update:modelValue="inputPersonal(personalseleccionado.id)"
+                            v-if="newper==0"
                             >   
                     </v-select>
                     <label for="" class="form-label">Carnet de Identidad</label>
                     <div class="input-group">
                     <span class="input-group-text" id="cantidad"><i class="bi bi-hash"></i></span>
-                    <input type="text" class="form-control" aria-describedby="cantidad" v-model="carnetIdentidad" disabled>
+                    <input type="text" class="form-control" aria-describedby="cantidad" v-model="carnetIdentidad" :disabled="newper==0">
                     </div>
-                    <label for="" class="form-label">Nombre</label>
+                    <label for="" class="form-label">Grado y Nombre</label>
                             <div class="input-group ">
-                                <span class="input-group-text" id="name"><i class="bi bi-person"></i></span>
-                                <input type="text" class="form-control" aria-describedby="name" v-model="nombrePersonal" disabled>
+                                <span class="input-group-text" id="name"><i class="bi bi-mortarboard"></i></span>
+                                <input type="text" class="form-control" aria-describedby="name" v-model="nombrePersonal" :disabled="newper==0">
                             </div> 
+                    <label for="" class="form-label">Cargo</label>
+                    <div class="input-group ">
+                        <span class="input-group-text" id="name"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" aria-describedby="name" v-model="cargoPersonal" :disabled="newper==0">
+                    </div> 
                     <div class="mb-3">
-                        <label for="" class="form-label">Fecha</label>
-                        <div class="input-group">
+                        <label for="" class="form-label" v-if="newper==0">Fecha</label>
+                        <div class="input-group" v-if="newper==0">
                             <span class="input-group-text" id="fecha"><i class="bi bi-calendar"></i></span>
                             <input type="date" class="form-control" aria-describedby="fecha" v-model="fecha">
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="tile-footer">
+                    <div v-if="errorPersonal" class="alert alert-danger">
+                        <strong>Por favor corrige los siguientes errores:</strong>
+                        <ul>
+                        <li v-for="error in errorMostrarMsjPersonal" :key="error">{{ error }}</li>
+                        </ul>
+                    </div>
                     <div v-if="errorcfpedido" class="alert alert-danger">
                         <strong>Por favor corrige los siguientes errores:</strong>
                         <ul>
                         <li v-for="error in Mostrarcfpedido" :key="error">{{ error }}</li>
                         </ul>
                     </div>
-                    <div class="text-center d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="text-center d-grid gap-2 d-md-flex justify-content-md-end" v-if="newper==0">
                         <button class="btn btn-info" type="button" @click="registrarpedido" v-if="!pdffinal"><i class="bi bi-check"></i>Confirmar</button>
                         <button class="btn btn-danger" @click="generarpdf" v-if="pdffinal"><i class="bi bi-pdf me-2"></i>Ver Comprobante</button>  
                         <button class="btn btn-success" @click="finalizarpedido" v-if="pdffinal"><i class="bi bi-check-square"></i>Finalizar Pedido</button>    
@@ -289,6 +313,7 @@ import axios from 'axios';
     const codpersonal = ref('');
     const carnetIdentidad = ref('');
     const nombrePersonal = ref('');
+    const cargoPersonal = ref('');
     const arrayActivos = ref([]);
     const arrayPersonales = ref([]);
     const unidad = ref('');
@@ -303,11 +328,14 @@ import axios from 'axios';
     const anio = ref(0);
     const numeroanual = ref(0);
     const fecha = ref('');
-    const activoseleccionado = ref(null);
-    const personalseleccionado = ref(null);
-    
-    
+    const activoseleccionado = ref({id:0,descrip:'--Seleccione--'});
+    const personalseleccionado = ref({id:0,nomper:'--Seleccione--'});
+    const newper = ref(0);
     const idpersonal = ref(0);
+    const id_almacen = ref(0);
+    const errorPersonal = ref('');
+    const errorMostrarMsjPersonal = ref([]);
+    const codper = ref('');
     const pagination = reactive({
         total: 0,
         current_page: 1,
@@ -332,10 +360,136 @@ import axios from 'axios';
         }
         return pages
         });
+    function newpersonal(){
+        newper.value=1;
+        obtenerCodigo();
+    };
+    function editarpersonal(){
+        if(personalseleccionado.value.id==0){
+            newper.value=0;
+            swal.fire('Seleccione una Persona','','error');
+            return;
+        }else{
+            newper.value=2;
+            idpersonal.value=personalseleccionado.value.id;
+            nombrePersonal.value=personalseleccionado.value.nomper;
+            carnetIdentidad.value=personalseleccionado.value.ciper;
+            cargoPersonal.value=personalseleccionado.value.cargo;
+        }
+    }
+    function cancelarpersonal(){
+        newper.value=0;
+        limpiarpersona();
+    };
+    const savepersonal = async()=>{
+        try {
+        if (validarPersonal()) {return;}
+            const response = await axios.post('/personal/registrar', {
+                codper: codper.value,
+                nomper: nombrePersonal.value,
+                ciper: carnetIdentidad.value,
+                cargo : cargoPersonal.value,
+                id_almacen: id_almacen.value
+            });
+                swal.fire({
+                    icon: 'success',
+                    title: 'Exito!',
+                    text: response.data.message,
+                });
+                newper.value = 0;
+                limpiarpersona();
+                listarPersonal(response.data.id_personal);
+                idpersonal.value=personalseleccionado.id;
+                carnetIdentidad.value = personalseleccionado.ciper;
+                nombrePersonal.value = personalseleccionado.nomper;
+                cargoPersonal.value = personalseleccionado.cargo;
+               
+        } catch (error) {
+             if (error.response.status === 422) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.response.data.message,
+                });
+            }
+        }
+    };
+    const updatepersonal = async()=>{
+        try {
+            if (validarPersonal()) {return;}
+            const response = await axios.put('/personal/actualizar', {
+                id: idpersonal.value,
+                nomper: nombrePersonal.value,
+                ciper: carnetIdentidad.value,
+                cargo : cargoPersonal.value,
+            });
+            swal.fire({
+                icon: 'success',
+                title: 'Exito!',
+                text: response.data.message,
+            });
+            newper.value=0;
+            limpiarpersona();
+            listarPersonal(response.data.id_personal);
+            idpersonal.value=personalseleccionado.id;
+            carnetIdentidad.value = personalseleccionado.ciper;
+            nombrePersonal.value = personalseleccionado.nomper;
+            cargoPersonal.value = personalseleccionado.cargo;
+        } catch (error) {
+            console.error('Error al actualizar la personal:', error);
+        }
+    };
+    function limpiarpersona(){
+        codper.value = '';
+        nombrePersonal.value = '';
+        carnetIdentidad.value = '';
+        cargoPersonal.value = '';
+        personalseleccionado.value = {id:0,nomper:'--Seleccione--'};
+        errorPersonal.value = 0;
+        errorMostrarMsjPersonal.value = [];
+    };
+    function validarPersonal() {
+        errorPersonal.value = 0
+        errorMostrarMsjPersonal.value = []
+        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-]+$/
+        const validnumber = /^[0-9]{6,15}$/
+        if (
+            !nombrePersonal.value ||
+            !validText.test(nombrePersonal.value)
+        ) {
+            errorMostrarMsjPersonal.value.push("Nombre del Personal esta vacío o incorrecto")
+        }
+        if (
+            !carnetIdentidad.value ||
+            !validnumber.test(carnetIdentidad.value)
+        ) {
+            errorMostrarMsjPersonal.value.push("carnet vacío o incorrecto")
+        }
+         if (
+            !cargoPersonal.value ||
+            !validText.test(cargoPersonal.value)
+        ) {
+            errorMostrarMsjPersonal.value.push("el Cargo esta vacío o incorrecto")
+        }
+        if (errorMostrarMsjPersonal.value.length) {
+            errorPersonal.value = 1
+        }
+
+        return errorPersonal.value
+    };
+    const obtenerCodigo = async () => {
+        try {
+            const response = await axios.get('/personal/codigo');
+            codper.value = response.data.codigo;
+        } catch (error) {
+            console.error('Error al obtener el código:', error);
+        }
+    };
     const obtenertitulo = async () => {
         try {
             const response = await axios.get('/almacen/titulo');
             tituloAlmacen.value = response.data.nomalmacen || '';
+            id_almacen.value = response.data.id;
         } catch (error) {
             console.error('Error al obtener el título del almacén:', error);
         }   
@@ -349,19 +503,12 @@ import axios from 'axios';
             console.error('Error al obtener las salidas:', error);
         }
     };
-    const inputArticulo = async (codart) => {
+    const inputArticulo = async () => {
         try {
-            if (!codart) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Advertencia',
-                    text: 'Por favor, ingrese un código de artículo.',
-                });
-                return;
-            }
-            const response = await axios.get(`/articulos/buscar/${codart}`);
-            if (response.data.articulo[0]) {
-                const articulo = response.data.articulo[0];
+            
+            const response = await axios.get(`/articulos/buscar/${activoseleccionado.value.codigo}`);
+            if (response.data.articulo) {
+                const articulo = response.data.articulo;
                 idarticulo.value=articulo.id;
                 codigoArticulo.value = articulo.codigo;
                 descripcionArticulo.value = articulo.descripcion;
@@ -411,10 +558,13 @@ import axios from 'axios';
         let parcial = stock-cantidad;
         return parcial;
     };
-    const listarPersonal = async () => {
+    const listarPersonal = async (id_personal) => {
         try {
             const response = await axios.get(`/personal/todos`);
             arrayPersonales.value = response.data.personal;
+            if(id_personal){
+                personalseleccionado.value = arrayPersonales.value.find(per=>per.id==id_personal);
+            }
         } catch (error) {
             console.error('Error al listar personal:', error);
         }
@@ -428,6 +578,7 @@ import axios from 'axios';
                 idpersonal.value=persona.id;
                 carnetIdentidad.value = persona.ciper;
                 nombrePersonal.value = persona.nomper;
+                cargoPersonal.value = persona.cargo;
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -539,6 +690,8 @@ import axios from 'axios';
         errorcfpedido.value=0;
         Mostrarcfpedido.value=[];
         total.value = 0;
+        personalseleccionado.value={id:0,nomper:'--Seleccione--'};
+        activoseleccionado.value={id:0,descrip:'--Seleccione--'};
     };
     function generarpdf() {
         modalpdf.value = true;
@@ -547,7 +700,7 @@ import axios from 'axios';
     function validafinal(){
         errorcfpedido.value=0;
         Mostrarcfpedido.value=[];
-        if(idpersonal.value==0){Mostrarcfpedido.value.push('Seleccione una Persona')};
+        if(personalseleccionado.value.id==0){Mostrarcfpedido.value.push('Seleccione una Persona')};
         if(arrayPedido.value.length==0){Mostrarcfpedido.value.push('No hay Articulos ingresados!')};
         if(Mostrarcfpedido.value.length){errorcfpedido.value=1}
         return errorcfpedido.value;

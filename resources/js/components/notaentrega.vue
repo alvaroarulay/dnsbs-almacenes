@@ -7,7 +7,7 @@
       
       </div>
         <div class="tile">
-            <h3 class="tile-title">Notas de Compra</h3>
+            <h3 class="tile-title">Notas de Entrada</h3>
             <div class="row mb-3">
                 <div class="col-md-6 col-md-offset-3 justify-content-start">
                     <div class="row">

@@ -60,7 +60,7 @@
 		bottom: 0cm;
 		left: 1.5cm;
 		right: 0cm;
-		height: 2cm;
+		height: 6cm;
 	}
 	.page-break {
 	    page-break-after: always;
@@ -190,8 +190,27 @@
             </tbody>
 		</table>
 		@endif
+	
     </main>
+
 <footer>
+		<table>
+		<tr>
+			<td style="height: 4cm;">
+				<div style=" text-align: center; width: 8cm;">
+					<p style="margin: 0.1cm; text-align: center;">___________________</p>
+					<!--<p style="font-size: x-small; margin: 0.1cm;">Daniel Ignacio Rios Vargas</p>!-->
+					<p style="font-size: x-small; margin: 0.1cm;"><b>Encargado de Almacenes</b></p>
+				</div>
+			</td>
+			<td style="height: 4cm;">
+				<div style=" text-align: center; width: 8cm;">
+					<p style="margin: 0.1cm; text-align: center;">___________________</p>
+					<p style="font-size: x-small; margin: 0.1cm;"><b>Autorizado por:</b></p>
+				</div>
+			</td>
+		</tr>
+	</table>
     <div style="width: 17.59cm; height: 2cm; text-align: center;">
         <p style="font-size: xx-small; margin: 0.1cm;">Sistema de Almacenes - Policía Boliviana</p>
         <p class="eslogan">"La seguridad es nuestra misión"</p>

@@ -262,9 +262,9 @@ import axios from 'axios';
         try {
             const response = await axios.post('/establecimiento/registrar', {
                 'id_ciudad' : ciudadSeleccionada.value,
-                'direccion' : direccion.value,
+                'direccion' : direccion.value.toUpperCase(),
                 'telefono' : telefono.value,
-                'nomestab' : nomestab.value
+                'nomestab' : nomestab.value.toUpperCase()
             });
             swal.fire(response.data.message,'','success');
             obtenerEstablecimientos(ciudadSeleccionada.value);
@@ -286,8 +286,8 @@ import axios from 'axios';
         try {
             const response = await axios.post('/almacen/registrar', {
                 'id_establecimiento' : estabSeleccionado.value,
-                'nomalmacen' : nomalmacen.value,
-                'ubiespec' : ubiespec.value
+                'nomalmacen' : nomalmacen.value.toUpperCase(),
+                'ubiespec' : ubiespec.value.toUpperCase()
             });
             swal.fire(response.data.message,'','success');
             obteneralmacenes(almacenSeleccionado.value);
@@ -307,9 +307,9 @@ import axios from 'axios';
             const response = await axios.put('/establecimiento/actualizar', {
                 'id': estabSeleccionado.value,
                 'id_ciudad' : ciudadSeleccionada.value,
-                'direccion' : direccion.value,
+                'direccion' : direccion.value.toUpperCase(),
                 'telefono' : telefono.value,
-                'nomestab' : nomestab.value
+                'nomestab' : nomestab.value.toUpperCase()
             });
             swal.fire(response.data.message,'','success');
             obtenerEstablecimientos(ciudadSeleccionada.value);
@@ -332,8 +332,8 @@ import axios from 'axios';
             const response = await axios.put('/almacen/actualizar', {
                 'id': estabSeleccionado.value,
                 'id_establecimiento' : estabSeleccionado.value,
-                'nomalmacen' : nomalmacen.value,
-                'ubiespec' : ubiespec.value
+                'nomalmacen' : nomalmacen.value.toUpperCase(),
+                'ubiespec' : ubiespec.value.toUpperCase()
             });
             swal.fire(response.data.message,'','success');
             obteneralmacenes(almacenSeleccionado.value);

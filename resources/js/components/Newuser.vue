@@ -127,8 +127,8 @@
                                     <option value="nomresp">Nombre</option>
                                     <option value="ci">Carnet</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarResponsable(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarResponsable(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarResponsable(1,buscar.toUpperCase(),criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarResponsable(1,buscar.toUpperCase(),criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +296,7 @@ export default {
     }, 
     abrirModal(){  
       this.modal = 1;
-      this.listarResponsable(1,this.buscar,this.criterio);
+      this.listarResponsable(1,this.buscar.toUpperCase(),this.criterio);
     },
     agregarDetalleModal(data){
       this.ci=data.ci;
@@ -315,7 +315,7 @@ export default {
         //Actualiza la página actual
         me.pagination.current_page = page;
         //Envia la petición para visualizar la data de esa página
-        me.listarResponsable(page,buscar,criterio);
+        me.listarResponsable(page,buscar.toUpperCase(),criterio);
     },
     registrarPersona(){
       if (this.validarPersona()){ return;}

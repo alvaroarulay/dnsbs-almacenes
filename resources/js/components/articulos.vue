@@ -162,7 +162,7 @@
                                     <label for="" class="form-label">Código</label>
                                     <div class="input-group mb-3 ">
                                         <span class="input-group-text" id="codigo"><i class="bi bi-upc"></i></span>
-                                        <input type="text" class="form-control" aria-describedby="codigo" v-model="codigo">
+                                        <input type="text" class="form-control" aria-describedby="codigo" v-model="codigo" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6" v-if="partidaSeleccionada==6">
@@ -305,7 +305,7 @@ import axios from 'axios';
         if (validarArticulo()) {return;}
             const response = await axios.post('/articulos/registrar', {
                 codigo: codigo.value,
-                descripcion: descripcion.value,
+                descripcion: descripcion.value.toUpperCase(),
                 fecha_expiracion: fechaExpiracion.value,
                 partida_id: partidaSeleccionada.value,
                 unidad_id: unidadseleccionada.value
@@ -334,7 +334,7 @@ import axios from 'axios';
             const response = await axios.put('/articulos/actualizar', {
                 id: idarticulo.value,
                 codigo: codigo.value,
-                descripcion: descripcion.value,
+                descripcion: descripcion.value.toUpperCase(),
                 fecha_expiracion: fechaExpiracion.value,
                 partida_id: partidaSeleccionada.value,
                 unidad_id: unidadseleccionada.value
@@ -352,7 +352,6 @@ import axios from 'axios';
             console.error('Error al actualizar la Articulo:', error);
         }
     };
-
     function changePage(page) {
         if (page === pagination.current_page) return
         obtenerArticulos(page,'','');
@@ -415,14 +414,7 @@ import axios from 'axios';
     function validarArticulo() {
         errorArticulo.value = 0
         errorMostrarMsjArticulo.value = []
-        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-]+$/
-
-        if (
-            !codigo.value ||
-            !validText.test(codigo.value)
-        ) {
-            errorMostrarMsjArticulo.value.push("el Código esta vacío o incorrecto")
-        }
+        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-/]+$/
         if (
             !descripcion.value ||
             !validText.test(descripcion.value)
@@ -525,10 +517,6 @@ import axios from 'axios';
             nomunidad.value = '';
         }
     };
-    const searchArticulos=async() => {
-        obtenerArticulos(1, buscar.value, criterio.value);
-    }
-
     onMounted(() => {
         obtenertitulo();
         obtenerArticulos(1,'','');

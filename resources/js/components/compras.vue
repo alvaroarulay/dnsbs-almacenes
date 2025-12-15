@@ -23,9 +23,9 @@
                             <option selected value="descripcion">Descripción</option>
                             <option value="codigo">Código</option>
                         </select>
-                        <input type="text" class="form-control" v-model="buscar" @keyup.enter="obtenerEntradas(1, buscar, criterio)"
+                        <input type="text" class="form-control" v-model="buscar" @keyup.enter="obtenerEntradas(1, buscar.toUpperCase(), criterio)"
                                placeholder="Buscar..." aria-label="Buscar" aria-describedby="button-addon2">
-                        <button class="btn btn-info btn-sm" @click="obtenerEntradas(1, buscar, criterio)">
+                        <button class="btn btn-info btn-sm" @click="obtenerEntradas(1, buscar.toUpperCase(), criterio)">
                             <i class="bi bi-search"></i> Buscar </button>
                     </div>
                 </div>
@@ -618,7 +618,6 @@ import axios from 'axios';
         nombreProveedor.value=provedorSeleccionado.value.nompro;
         idprovedor.value = provedorSeleccionado.value.id;
     };
-  
     function cerrarModalpdf() {
         modalpdf.value = false;
         pdf.value = '';
@@ -880,14 +879,8 @@ import axios from 'axios';
     function validarArticulo() {
         errorArticulo.value = 0
         errorMostrarMsjArticulo.value = []
-        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-]+$/
+        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-/]+$/
 
-        if (
-            !codigoArticulo.value ||
-            !validText.test(codigoArticulo.value)
-        ) {
-            errorMostrarMsjArticulo.value.push("el Código esta vacío o incorrecto")
-        }
         if (
             !descripcionArticulo.value ||
             !validText.test(descripcionArticulo.value)

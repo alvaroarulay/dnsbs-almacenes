@@ -130,7 +130,7 @@
 				</td>
 			</tr>
         </table>
-          @foreach ($datosAgrupados as $grupo)
+@foreach ($datosAgrupados as $grupo)
     <h5>Nota: {{ $grupo['numero_anual'] }}</h5>
     <table id="customers" style="width: 100%; margin-top: 0.2cm;">
         <thead>

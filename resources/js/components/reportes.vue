@@ -97,75 +97,74 @@
         </div>
     </div>
     <div class="row">
-<div class="justify-content-center">
-             <div class="card border-info col-md-12 mb-3">
-                <div class="card-header text-bg-info mb-3">Resumen por Gestión</div>
-                <div class="card-body text-primary">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover table-sm">
-                            <thead>
-                                <tr class="table-success">
-                                    <th>Partida</th>
-                                    <th>Stock Inicial</th>
-                                    <th>Entradas (Cantidad)</th>
-                                    <th>Salidas (Cantidad)</th>
-                                    <th>Stock Final </th>
-                                    <th>Total al Inicio (en Bs.)</th>
-                                    <th>Total al Final (en Bs.)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="resumen in arrayResumen" :key="resumen.codigo">
-                                    <td>{{ resumen.codigo + '-' + resumen.nompartida }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.stock_inicial) }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.compras) }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.pedidos) }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.stock_final) }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.total_inicio) }}</td>
-                                    <td style="text-align: right;">{{ format(resumen.total_final)  }}</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td><b>Totales:</b></td>
-                                    <td style="text-align: right;"><b>{{ format(total_inicio) }}</b></td>
-                                    <td style="text-align: right;"><b>{{ format(total_compras) }}</b></td>
-                                    <td style="text-align: right;"><b>{{ format(total_pedidos) }}</b></td>
-                                    <td style="text-align: right;"><b>{{ format(stock_final) }}</b></td>
-                                    <td style="text-align: right;"><b>{{ format(total_al_inicio) }}</b></td>
-                                    <td style="text-align: right;"><b>{{ format(total_al_final) }}</b></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+        <div class="justify-content-center">
+                <div class="card border-info col-md-12 mb-3">
+                    <div class="card-header text-bg-info mb-3">Resumen por Gestión</div>
+                    <div class="card-body text-primary">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-sm">
+                                <thead>
+                                    <tr class="table-success">
+                                        <th>Partida</th>
+                                        <th>Stock Inicial</th>
+                                        <th>Entradas (Cantidad)</th>
+                                        <th>Salidas (Cantidad)</th>
+                                        <th>Stock Final </th>
+                                        <th>Total al Inicio (en Bs.)</th>
+                                        <th>Total al Final (en Bs.)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="resumen in arrayResumen" :key="resumen.codigo">
+                                        <td>{{ resumen.codigo + '-' + resumen.nompartida }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.stock_inicial) }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.compras) }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.pedidos) }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.stock_final) }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.total_inicio) }}</td>
+                                        <td style="text-align: right;">{{ format(resumen.total_final)  }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><b>Totales:</b></td>
+                                        <td style="text-align: right;"><b>{{ format(total_inicio) }}</b></td>
+                                        <td style="text-align: right;"><b>{{ format(total_compras) }}</b></td>
+                                        <td style="text-align: right;"><b>{{ format(total_pedidos) }}</b></td>
+                                        <td style="text-align: right;"><b>{{ format(stock_final) }}</b></td>
+                                        <td style="text-align: right;"><b>{{ format(total_al_inicio) }}</b></td>
+                                        <td style="text-align: right;"><b>{{ format(total_al_final) }}</b></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="form-label">Gestión</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select name="" id="" class="form-select" v-model="gestionSeleccionada" @change="onChangeGestion($event)">
-                                        <option value="0">Seleccione...</option>
-                                         <option v-for="gestion in gestiones" :key="gestion.gestion" :value="gestion.gestion">
-                                            {{ gestion.gestion }}
-                                        </option>
-                                    </select>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="form-label">Gestión</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select name="" id="" class="form-select" v-model="gestionSeleccionada" @change="onChangeGestion($event)">
+                                            <option value="0">Seleccione...</option>
+                                            <option v-for="gestion in gestiones" :key="gestion.gestion" :value="gestion.gestion">
+                                                {{ gestion.gestion }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-danger me-md-2" type="button" @click="pdfcompras" ><i class="bi bi-file-earmark-pdf"></i>Pdf</button> 
-                           <button class="btn btn-success me-md-2" type="button" @click="excelcompras" ><i class="bi bi-file-earmark-excel"></i>Excel</button> 
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-danger me-md-2" type="button" @click="pdfcompras" ><i class="bi bi-file-earmark-pdf"></i>Pdf</button> 
+                            <button class="btn btn-success me-md-2" type="button" @click="excelcompras" ><i class="bi bi-file-earmark-excel"></i>Excel</button> 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
-        
     <!-- modal-content -->
      <div class="modal fade" tabindex="-1" :class="{'mostrar' : modalgraficoc}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" data-target=".bd-example-modal-lg">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl" role="document">
@@ -466,9 +465,16 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
     }).format(value);
     };
     function pdfcompras(){
-        modalgraficoc.value= true;
-        grafico.value=false;
-        pdftotal();
+        if(gestionSeleccionada.value==0){
+            swal.fire('Seleccione una Gestión','','error');
+            modalgraficoc.value= false;
+            modal
+            return;
+        }else{
+           modalgraficoc.value= true;
+            grafico.value=false;
+            pdftotal(); 
+        }
     }
      const pdftotal = async () => {
          try {
@@ -478,6 +484,10 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
         }
     }
      const excelcompras = async () => {
+        if(gestionSeleccionada.value==0){
+            swal.fire('Seleccione una Gestión','','error');
+            return;
+        }
          try {
            const url = `/exportar-reporte?gestion=${gestionSeleccionada.value}`;
            window.open(url, '_blank');

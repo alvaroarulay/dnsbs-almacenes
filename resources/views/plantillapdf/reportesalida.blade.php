@@ -144,18 +144,36 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach ($datos as $dato)
-                    <tr>
-                        <td style="text-align:center">{{$loop->iteration}}</td>
-                        <td style="text-align:center">{{$dato->codigo}}</td>
-                        <td>{{$dato->descripcion}}</td>
-						<td>{{$dato->nomunidad}}</td>
-						<td>{{$dato->fecha_expiracion}}</td>
-						<td style="text-align:right">{{$dato->cantidad}}</td>
-						<td style="text-align:right">{{number_format($dato->precio_unitario, 2, ',', '.')}}</td>	
-						<td style="text-align:right"><b>{{ number_format($dato->cantidad * $dato->precio_unitario, 2, ',', '.')}}</b></td>
-                    </tr>
-            @endforeach
+			@foreach ($partidas as $partida)
+					@if(isset($datos[$partida->id]))
+					<tr>
+						<td style="text-align:center;"><b>{{$partida->codigo}}</b></td>
+						<td colspan="7"><b>{{$partida->codigo . ' - ' . $partida->nompartida}}</b></td>
+					</tr>
+					
+				@foreach ($datos[$partida->id] ?? [] as $item)
+					<tr>
+						<td style="text-align:center">{{$loop->iteration}}</td>
+						<td>{{ $item->codigo }}</td>
+						<td>{{ $item->descripcion }}</td>
+						<td>{{ $item->nomunidad }}</td>
+						<td>{{$item->fecha_expiracion}}</td>
+						<td style="text-align:right;">{{ $item->cantidad }}</td>
+						<td style="text-align:right">{{number_format($item->precio_unitario, 2, ',', '.')}}</td>	
+						<td style="text-align:right;">{{ number_format($item->subtotal, 2, ',', '.') }}</td>
+					</tr>
+				@endforeach
+
+				<tr>
+					<td colspan="7" style="text-align:right;"><strong>SubTotal {{ $partida->codigo . ' - ' . $partida->nompartida }}:</strong></td>
+					<td style="text-align:right;">
+						<strong>{{ number_format($subtotales[$partida->id], 2, ',', '.') }}</strong>
+					</td>
+				</tr>
+				@endif
+			@endforeach
+
+
             </tbody>
             <tfoot>
 				<tr >
@@ -181,7 +199,7 @@
 			<td style="height: 4cm;">
 				<div style=" text-align: center; width: 8cm;">
 					<p style="margin: 0.1cm; text-align: center;">___________________</p>
-					<p style="font-size: x-small; margin: 0.1cm;"><b>Autorizado por:</b></p>
+					<p style="font-size: x-small; margin: 0.1cm;"><b>Recibi Conforme</b></p>
 				</div>
 			</td>
 		</tr>

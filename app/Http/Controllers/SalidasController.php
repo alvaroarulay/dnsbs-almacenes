@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Salidas;
 use App\Models\Entradas;
 use App\Models\Personal;
+use App\Models\Partidas;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Almacenes;
 use App\Models\Establecimiento;
@@ -171,56 +172,79 @@ class SalidasController extends Controller
             return response()->json(['error' => 'Error al eliminar: ' . $e->getMessage()], 500);
         }
     }
-    public function pdfsalida($fecha,$anio,$numeroanual){
+   public function pdfsalida($fecha, $anio, $numeroanual)
+    {
         Date::setLocale('es');
         $date = new Date($fecha);
-        $fechaTitulo = $date->format('l j F Y');
-        $fechDerecha = $date->format('d/M/Y');
+
+        $fechaTitulo  = $date->format('l j F Y');
+        $fechaDerecha = $date->format('d/M/Y');
+
+        $partidas = Partidas::all();
+        // ✅ Consulta principal con id_partida incluido
         $datos = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
-            ->join('movimientos','salidas.id','=','movimientos.id_salida')
-            ->select('movimientos.cantidad_utilizada as cantidad', 'articulos.codigo','unidades.nomunidad','articulos.descripcion' ,'movimientos.precio_unitario')
+            ->join('movimientos', 'salidas.id', '=', 'movimientos.id_salida')
+            ->select(
+                'movimientos.cantidad_utilizada as cantidad',
+                'articulos.codigo',
+                'unidades.nomunidad',
+                'articulos.descripcion',
+                'movimientos.precio_unitario',
+                'articulos.id_partida',
+                DB::raw('(movimientos.cantidad_utilizada * movimientos.precio_unitario) as subtotal')
+            )
             ->where('salidas.numero_anual', $numeroanual)
             ->where('salidas.anio', $anio)
-            ->orderBy('salidas.id', 'asc')->get();
-        $resp = Salidas::join('personal','salidas.id_personal','=','personal.id')
-                ->select('personal.nomper','personal.cargo')
-                ->where('salidas.numero_anual','=',$numeroanual)
-                ->where('salidas.anio','=',$anio)
-                ->groupBy('personal.nomper')
-                ->groupBy('personal.cargo')->first();
-        $titulo = 'NOTA DE SALIDA N° '.$numeroanual.'/'.$anio;
+            ->orderBy('articulos.id_partida')
+            ->orderBy('articulos.codigo')
+            ->get();
+
+        // ✅ Responsable
+        $resp = Salidas::join('personal', 'salidas.id_personal', '=', 'personal.id')
+            ->select('personal.nomper', 'personal.cargo')
+            ->where('salidas.numero_anual', $numeroanual)
+            ->where('salidas.anio', $anio)
+            ->first();
+
+        // ✅ Datos institucionales
+        $titulo = 'NOTA DE SALIDA N° ' . $numeroanual . '/' . $anio;
         $subtitulo = 'CONSUMO / DISTRIBUCIÓN';
-        $almacen = Almacenes::where('seleccionado','=',1)->first();
-        $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
-        $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();
-        $filas = Salidas::join('movimientos','salidas.id','=','movimientos.id_salida')
-                ->select('movimientos.cantidad_utilizada as cantidad','movimientos.precio_unitario')
-                ->where('salidas.numero_anual', $numeroanual)->where('salidas.anio', $anio)->get();
-        $resultados = [];
 
-        foreach ($filas as $fila) {
-            $multiplicacion = $fila->cantidad * $fila->precio_unitario; 
-            $resultados[] = $multiplicacion;
-        }
+        $almacen = Almacenes::where('seleccionado', 1)->first();
+        $establecimiento = Establecimiento::find($almacen->id_establecimiento);
+        $ciudad = Ciudad::find($establecimiento->id_ciudad);
 
-        $total = array_sum($resultados);
-        
-        $pdf=Pdf::loadView('plantillapdf.reportesalida',[
-                'datos'=>$datos,
-                'titulo'=>$titulo,
-                'fechaTitulo'=>$fechaTitulo,
-                'fechaDerecha'=>$fechDerecha,
-                'almacen'=>$almacen->nomalmacen,
-                'establecimiento'=>$establecimiento->nomestab,
-                'ciudad'=>$ciudad->nomciudad,
-                'subtitulo'=>$subtitulo,
-                'total'=>$total,
-                'resp'=>$resp,
-                ]);
+        // ✅ Total general
+        $total = $datos->sum('subtotal');
+
+        // ✅ Agrupación por partida para la vista (dos foreach)
+        $agrupado = $datos->groupBy('id_partida');
+
+        // ✅ Subtotales por partida
+       $subtotales = $datos->groupBy('id_partida')->map(function ($grupo) {
+                    return $grupo->sum('subtotal');
+                });
+
+        // ✅ Generación del PDF
+        $pdf = Pdf::loadView('plantillapdf.reportesalida', [
+            'partidas'     =>$partidas,
+            'datos'        => $agrupado,
+            'subtotales'   => $subtotales,
+            'titulo'       => $titulo,
+            'fechaTitulo'  => $fechaTitulo,
+            'fechaDerecha' => $fechaDerecha,
+            'almacen'      => $almacen->nomalmacen,
+            'establecimiento' => $establecimiento->nomestab,
+            'ciudad'       => $ciudad->nomciudad,
+            'subtitulo'    => $subtitulo,
+            'total'        => $total,
+            'resp'         => $resp,
+        ]);
+
         $pdf->set_paper('letter', 'portrait');
         return $pdf->stream();
-        }
+    }
     public function pdfSalidas(Request $request){
         Date::setLocale('es');
         $fechaTitulo = Date::now()->format(' j \\de F \\de Y');

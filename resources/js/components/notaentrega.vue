@@ -35,9 +35,9 @@
                             <option selected value="provedores.nompro">Proveedor</option>
                             <option value="personal.nomper">Nombre Persona</option>
                         </select>
-                        <input type="text" class="form-control" v-model="buscar" @keyup.enter="obtenerNotas(1, buscar, criterio)"
+                        <input type="text" class="form-control" v-model="buscar" @keyup.enter="obtenerNotas(1, buscar.toUpperCase(), criterio)"
                                placeholder="Buscar..." aria-label="Buscar" aria-describedby="button-addon2">
-                        <button class="btn btn-info btn-sm" @click="obtenerNotas(1, buscar, criterio)">
+                        <button class="btn btn-info btn-sm" @click="obtenerNotas(1, buscar.toUpperCase(), criterio)">
                             <i class="bi bi-search"></i> Buscar </button>
                     </div>
                 </div>

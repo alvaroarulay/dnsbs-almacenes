@@ -175,56 +175,94 @@ class EntradasController extends Controller
             return response()->json(['error' => 'Error al registrar la entrada: ' . $e->getMessage()], 500);
         }
     }
-    public function pdfentrada($fecha,$anio,$numeroanual){
-        Date::setLocale('es');
+   public function pdfentrada($fecha, $anio, $numeroanual)
+{
+      Date::setLocale('es');
         $date = new Date($fecha);
         $fechaTitulo = $date->format('l j F Y');
-        $fechDerecha = $date->format('d/M/Y');
-        $datos = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
-            ->join('personal', 'entradas.id_personal', '=', 'personal.id')
-            ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
-            ->select('entradas.*', 'articulos.codigo','articulos.descripcion' , 'personal.nomper as personal', 'provedores.nompro as proveedor')
-            ->where('entradas.numero_anual', $numeroanual)
-            ->where('entradas.anio', $anio)
-            ->orderBy('entradas.id', 'asc')->get();
-        $factura=Facturas::join('provedores','facturas.id_provedor','=','provedores.id')
-                            ->select('facturas.*','provedores.nompro as razon','provedores.nit')
-                            ->where('nro_anual','=',$numeroanual)->where('gestion','=',$anio)->get();
-        if($factura->count()==0){
-           $subtitulo='COMPRA SIN FACTURA'; 
-        }else{
-            $subtitulo='COMPRA CON FACTURA';
-        }
-        
-        $titulo = 'NOTA DE ENTRADA N° '.$numeroanual.'/'.$anio;
-        $almacen = Almacenes::where('seleccionado','=',1)->first();
-        $establecimiento = Establecimiento::where('id','=',$almacen->id_establecimiento)->first();
-        $ciudad = Ciudad::where('id','=',$establecimiento->id_ciudad)->first();
-        $filas = Entradas::where('entradas.numero_anual', $numeroanual)->where('entradas.anio', $anio)->get();
-        $resultados = [];
+        $fechaDerecha = $date->format('d/M/Y');
 
-        foreach ($filas as $fila) {
-            $multiplicacion = $fila->cantidad * $fila->precio_unitario; 
-            $resultados[] = $multiplicacion;
-        }
+    $partidas = Partidas::all();
 
-        $total = array_sum($resultados);
-        
-        $pdf=Pdf::loadView('plantillapdf.reporteentrada',[
-                'datos'=>$datos,
-                'titulo'=>$titulo,
-                'fechaTitulo'=>$fechaTitulo,
-                'fechaDerecha'=>$fechDerecha,
-                'almacen'=>$almacen->nomalmacen,
-                'establecimiento'=>$establecimiento->nomestab,
-                'ciudad'=>$ciudad->nomciudad,
-                'subtitulo'=>$subtitulo,
-                'total'=>$total,
-                'factura'=>$factura,
-                ]);
-        $pdf->set_paper('letter', 'portrait');
-        return $pdf->stream();
-        }
+    // ✅ Consulta corregida y optimizada
+    $datos = Entradas::join('articulos', 'entradas.id_articulo', '=', 'articulos.id')
+        ->join('personal', 'entradas.id_personal', '=', 'personal.id')
+        ->join('provedores', 'entradas.id_proveedor', '=', 'provedores.id')
+        ->select(
+            'articulos.codigo',
+            'articulos.id_partida',
+            'articulos.descripcion',
+            'personal.nomper as personal',
+            'provedores.nompro as proveedor',
+            'entradas.cantidad',
+            'entradas.precio_unitario',
+            DB::raw('(entradas.cantidad * entradas.precio_unitario) as subtotal')
+        )
+        ->where('entradas.numero_anual', $numeroanual)
+        ->where('entradas.anio', $anio)
+        ->orderBy('entradas.id', 'asc')
+        ->groupBy(
+            'articulos.id_partida',
+            'articulos.codigo',
+            'articulos.descripcion',
+            'personal.nomper',
+            'provedores.nompro',
+            'entradas.cantidad',
+            'entradas.precio_unitario',
+            'entradas.id'
+        )->groupBy('articulos.id_partida')
+        ->get();
+$agrupado = $datos->groupBy('id_partida');
+
+
+    // ✅ Factura
+    $factura = Facturas::join('provedores', 'facturas.id_provedor', '=', 'provedores.id')
+        ->select('facturas.*', 'provedores.nompro as razon', 'provedores.nit')
+        ->where('nro_anual', $numeroanual)
+        ->where('gestion', $anio)
+        ->get();
+
+    $subtitulo = $factura->isEmpty()
+        ? 'COMPRA SIN FACTURA'
+        : 'COMPRA CON FACTURA';
+
+    // ✅ Datos de ubicación
+    $almacen = Almacenes::where('seleccionado', 1)->first();
+    $establecimiento = Establecimiento::find($almacen->id_establecimiento);
+    $ciudad = Ciudad::find($establecimiento->id_ciudad);
+
+    // ✅ Total general
+    $total = $datos->sum('subtotal');
+
+    // ✅ Subtotales por partida
+    $subtotales = $datos
+    ->groupBy('id_partida')
+    ->map(function ($grupo) {
+        return $grupo->sum('subtotal');
+    });
+
+
+
+    // ✅ Generación del PDF
+    $pdf = Pdf::loadView('plantillapdf.reporteentrada', [
+        'datos'          => $agrupado,
+        'titulo'         => 'NOTA DE ENTRADA N° ' . $numeroanual . '/' . $anio,
+        'fechaTitulo'    => $fechaTitulo,
+        'fechaDerecha'   => $fechaDerecha,
+        'almacen'        => $almacen->nomalmacen,
+        'establecimiento'=> $establecimiento->nomestab,
+        'ciudad'         => $ciudad->nomciudad,
+        'subtitulo'      => $subtitulo,
+        'total'          => $total,
+        'factura'        => $factura,
+        'partidas'       => $partidas,
+        'subtotales'     => $subtotales,
+    ]);
+
+    $pdf->set_paper('letter', 'portrait');
+
+    return $pdf->stream();
+}
     public function pdfEntradas(Request $request){
         Date::setLocale('es');
         $fechaTitulo = Date::now()->format(' j \\de F \\de Y');

@@ -293,7 +293,7 @@ import axios from 'axios';
         });
     const obtenerArticulos = async (page,buscar,criterio) => {
         try {
-            const response = await axios.get('/articulos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio + '&partida_id=' + partidaSeleccionada.value);
+            const response = await axios.get('/articulos?page=' + page + '&buscar='+ buscar.toUpperCase() + '&criterio='+ criterio + '&partida_id=' + partidaSeleccionada.value);
             articulos.value = response.data.articulos.data;
             Object.assign(pagination, response.data.pagination)
         } catch (error) {
@@ -414,7 +414,7 @@ import axios from 'axios';
     function validarArticulo() {
         errorArticulo.value = 0
         errorMostrarMsjArticulo.value = []
-        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9.-/]+$/
+        const validText = /^[ a-zA-ZñÑáéíóúÁÉÍÓÚ0-9,.-/]+$/
         if (
             !descripcion.value ||
             !validText.test(descripcion.value)
@@ -476,6 +476,7 @@ import axios from 'axios';
     };
     const onChangePartida = (event) => {
         partidaSeleccionada.value = event.target.value;
+        obtenerUnidades(partidaSeleccionada.value);
         if (partidaSeleccionada.value != 0) {
             nompartida.value = partidas.value.find(partida => partida.id == partidaSeleccionada.value).nompartida;
         } else {
@@ -483,7 +484,7 @@ import axios from 'axios';
         }
         if(newArticulo.value==1){
             cantidadpartida(event.target.value);
-            obtenerUnidades(partidaSeleccionada.value);
+            
         }
         if(editArticulo.value==1){
             unidadseleccionada.value = 0;
@@ -501,9 +502,16 @@ import axios from 'axios';
             console.log(error);
         });
     }
-    const obtenerUnidades = async () => {
+    const obtenerUnidades = async (id) => {
+        let partidas;
+        if(id==0){
+           partidas = partidaSeleccionada.value
+        }
+        else{
+            partidas = id;
+        }
         try {
-            const response = await axios.get('/unidades/todos/'+partidaSeleccionada.value);
+            const response = await axios.get('/unidades/todos/'+partidas);
             unidades.value = response.data;
         } catch (error) {
             console.error('Error al obtener las unidades:', error);

@@ -23,8 +23,13 @@ class ArticulosController extends Controller
         $query = Articulos::join('partidas', 'articulos.id_partida', '=', 'partidas.id')
                             ->join('unidades', 'articulos.id_unidad', '=', 'unidades.id')
                             ->join('almacen', 'articulos.id_almacen', '=', 'almacen.id')
-            ->select('articulos.*','partidas.codigo as codigo_partida','partidas.nompartida','unidades.nomunidad as unidad_nombre','almacen.nomalmacen as almacen_nombre','partidas.id as id_partida','unidades.id as id_unidad')
-            ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id')->orderBy('articulos.codigo', 'asc');
+            ->select('articulos.*',
+            'partidas.codigo as codigo_partida',
+            'partidas.nompartida','unidades.nomunidad as unidad_nombre',
+            'almacen.nomalmacen as almacen_nombre',
+            'partidas.id as id_partida','unidades.id as id_unidad')
+            ->groupBy('articulos.id','partidas.nompartida','unidades.nomunidad','almacen.nomalmacen','partidas.id','unidades.id')
+            ->orderBy('articulos.created_at', 'desc');
         if ($partida != 0) {
             $articulos = $query->where('articulos.id_partida','=', $partida)->paginate(10);
         }
@@ -133,7 +138,7 @@ class ArticulosController extends Controller
             $articulo = Articulos::findOrFail($request->id);
             $articulo->codigo = $request->codigo;
             $articulo->descripcion = $request->descripcion;
-            $articulo->fecha_expiracion = $request->fecha_expiracion;
+            $articulo->fecha_expiracion = $request->fecha_expiracion?$articulo->fecha_expiracion:'';
             $articulo->id_partida = $request->partida_id;
             $articulo->id_unidad = $request->unidad_id;
             $articulo->save();

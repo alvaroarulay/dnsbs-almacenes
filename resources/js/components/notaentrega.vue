@@ -281,7 +281,7 @@ import axios from 'axios';
     };
     const obtenerNotas = async (page,buscar,criterio) => {
         try {
-            const response = await axios.get('/entradas/notas?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio + '&anio=' + gestionSeleccionada.value);
+            const response = await axios.get('/entradas/notas?page=' + page + '&buscar='+ buscar.toUpperCase() + '&criterio='+ criterio + '&anio=' + gestionSeleccionada.value);
             entradas.value = response.data.entradas.data;
             Object.assign(pagination, response.data.pagination)
         } catch (error) {
@@ -396,11 +396,11 @@ import axios from 'axios';
             }
 
         } catch (error) {
-            console.error('Error al eliminar la provedor:', error);
+            console.error('Error al eliminar', error);
             Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: 'No se pudo eliminar la provedor',
+            title: 'No se pudo eliminar.',
+            text: 'La nota de entrada ya tiene movimimento.',
             });
         }
     }

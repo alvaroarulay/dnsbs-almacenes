@@ -190,14 +190,21 @@
 	<table>
 		<tr>
 			<td style="height: 4cm;">
-				<div style=" text-align: center; width: 8cm;">
+				<div style=" text-align: center; width: 6cm;">
 					<p style="margin: 0.1cm; text-align: center;">___________________</p>
 					<!--<p style="font-size: x-small; margin: 0.1cm;">Daniel Ignacio Rios Vargas</p>!-->
 					<p style="font-size: x-small; margin: 0.1cm;"><b>Encargado de Almacenes</b></p>
 				</div>
 			</td>
 			<td style="height: 4cm;">
-				<div style=" text-align: center; width: 8cm;">
+				<div style=" text-align: center; width: 6cm;">
+					<p style="margin: 0.1cm; text-align: center;">___________________</p>
+					<!--<p style="font-size: x-small; margin: 0.1cm;">Daniel Ignacio Rios Vargas</p>!-->
+					<p style="font-size: x-small; margin: 0.1cm;"><b>Autorizado por</b></p>
+				</div>
+			</td>
+			<td style="height: 4cm;">
+				<div style=" text-align: center; width: 6cm;">
 					<p style="margin: 0.1cm; text-align: center;">___________________</p>
 					<p style="font-size: x-small; margin: 0.1cm;"><b>Recibi Conforme</b></p>
 				</div>

@@ -6,7 +6,7 @@
          </div> 
         <ul class="app-breadcrumb breadcrumb">
           <select name="" id="" class="form-select form-select-lg mb-3" v-model="ciudadSeleccionada" @change="onChangeCiudad($event)">
-            <option :value=0>Todos</option>
+            <option :value=0>--Seleccione--</option>
             <option v-for="ciudad in ciudades" :key="ciudad.id" :value="ciudad.id">
                 {{ ciudad.nomciudad }}
             </option>
@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-md-12 justify-content-center">
             <div class="card border-secondary mb-3">
-                <div class="card-header text-bg-secondary mb-3">Compras y Pedidos</div>
+                <div class="card-header text-bg-secondary mb-3">Entradas y Salidas</div>
                 <div class="card-body text-primary">
                     <div class="row">
                         <div class="col-md-4">
@@ -92,6 +92,7 @@
                 </div>
                 <div class="card-footer text-center d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="btn btn-info me-md-2" type="button" @click="graficocompras"><i class="bi bi-bar-chart-line-fill"></i>Ver Gráfico</button>
+                    <button class="btn btn-success me-md-2" type="button" @click="reportexfechas"><i class="bi bi-file-earmark-excel"></i>Descargar Reporte</button>
                 </div>
             </div>
         </div>
@@ -250,6 +251,12 @@ import {
 import axios from 'axios'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale)
+    const hoy = new Date()
+    const fechaf = ref(hoy.toLocaleDateString('en-CA'))
+
+    const ayer = new Date()
+    ayer.setDate(hoy.getDate() - 1)
+    const fechai = ref(ayer.toLocaleDateString('en-CA'))
 
     const etiquetas = ref([]);
     const valores = ref([]);
@@ -263,8 +270,6 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
     const estabSeleccionado = ref(0);
     const almacenes = ref([]);
     const almacenSeleccionado = ref(0);
-    const fechai = ref('');
-    const fechaf = ref('');
     const arrayPartidas = ref([]);
     const partidas = ref('0');
     const modalgraficoc = ref(false);
@@ -494,6 +499,18 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, 
        } catch (error) {
             console.error('Error al obtener los datos:', error);
         }
+    }
+    const reportexfechas = async ()=>{
+        if(ciudadSeleccionada.value==0){
+            swal.fire('Seleccione una Ciudad','','error');
+            return;
+        }
+        try {
+           const url = `/exportarxls?ciudad=${ciudadSeleccionada.value}&fechai=${fechai.value}&fechaf=${fechaf.value}`;
+           window.open(url, '_blank');
+       } catch (error) {
+            console.error('Error al obtener los datos:', error);
+       }
     }
     function onChangeGestion(e){
         gestionSeleccionada.value = e.target.value;

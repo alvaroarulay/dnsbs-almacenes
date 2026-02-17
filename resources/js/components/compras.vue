@@ -91,7 +91,6 @@
        <template v-else-if="newcompra">
         <div class="row">
             <div class="col-md-6 tile">
-           
                 <div class="tile-title-w-btn">
                     <h3 class="title">Articulo</h3>
                     <div class="btn-group text-end">
@@ -641,8 +640,29 @@ import axios from 'axios';
     };
     function agregarProducto(){
         if(validacompra()){return};
-        arrayCompras.value.push({'idarticulo':idarticulo.value,'codigo':codigoArticulo.value,'descripcion':descripcionArticulo.value,'precio':precio.value,'cantidad':cantidad.value});
-      
+        // Objeto que quieres agregar
+        const nuevoArticulo = {
+        idarticulo: idarticulo.value,
+        codigo: codigoArticulo.value,
+        descripcion: descripcionArticulo.value,
+        precio: precio.value,
+        cantidad: cantidad.value
+        };
+
+        // Validación: buscar si ya existe en el array
+        const existe = arrayCompras.value.some(item =>
+        item.descripcion === nuevoArticulo.descripcion 
+        );
+
+        if (existe) {
+        swal.fire({
+            icon: 'warning',
+            title: 'Advertencia',
+            text: 'Este artículo ya está en la lista.',
+        }); 
+        } else {
+        arrayCompras.value.push(nuevoArticulo);
+        }
     };
     function updatecompra(index){
         updcompra.value=index;

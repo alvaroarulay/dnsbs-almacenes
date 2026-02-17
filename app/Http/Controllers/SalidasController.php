@@ -15,7 +15,7 @@ use App\Models\Ciudad;
 use App\Models\Facturas;
 use App\Models\Movimientos;
 use Jenssegers\Date\Date;
-use App\Exports\SalidasExport;
+use App\Exports\ReporteAnualExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SalidasController extends Controller
@@ -52,20 +52,24 @@ class SalidasController extends Controller
     public function notas(Request $request){
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-        $query = Salidas::join('articulos', 'salidas.id_articulo', '=', 'articulos.id')
-                ->join('almacen','articulos.id_almacen','=','almacen.id')
-                ->join('personal','salidas.id_personal','=','personal.id')
-                ->join('movimientos','salidas.id','=','movimientos.id_salida')
-                ->select('salidas.numero_anual','salidas.anio','salidas.fecha','salidas.created_at','personal.nomper',
-                DB::raw('sum(salidas.cantidad) as cantidad'),
-                DB::raw('sum(salidas.cantidad * movimientos.precio_unitario) as total'))
-                ->where('anio','=',$request->anio)
-                ->groupBy('personal.nomper')
-                ->groupBy('salidas.fecha')
-                ->groupBy('salidas.anio')
-                ->groupBy('salidas.created_at')
-                ->groupBy('salidas.numero_anual')
-                ->orderBy('salidas.numero_anual','asc');
+        $query = Salidas::join('personal','salidas.id_personal','=','personal.id')
+            ->join('movimientos','salidas.id','=','movimientos.id_salida')
+            ->select(
+                'salidas.numero_anual',
+                'salidas.anio',
+                'salidas.fecha',
+                DB::raw('DATE(salidas.created_at) as created_at'), // <-- truncar la fecha
+                'personal.nomper',
+                DB::raw('COUNT(salidas.cantidad) as cantidad'),
+                DB::raw('SUM(salidas.cantidad * movimientos.precio_unitario) as total')
+            )
+            ->where('anio','=',$request->anio)
+            ->groupBy('personal.nomper')
+            ->groupBy('salidas.fecha')
+            ->groupBy('salidas.anio')
+            ->groupBy(DB::raw('DATE(salidas.created_at)')) // <-- agrupar solo por fecha
+            ->groupBy('salidas.numero_anual')
+            ->orderBy('salidas.numero_anual','desc');
         if ($buscar=='') {
             $salidas = $query->paginate(10);
         } else {
@@ -242,7 +246,7 @@ class SalidasController extends Controller
             'resp'         => $resp,
         ]);
 
-        $pdf->set_paper('letter', 'portrait');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
         return $pdf->stream();
     }
     public function pdfSalidas(Request $request){
@@ -295,11 +299,11 @@ class SalidasController extends Controller
             'establecimiento'=>$establecimiento->nomestab,
             'ciudad'=>$ciudad->nomciudad,
             ]);
-        $pdf->set_paper('letter', 'portrait');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
         return $pdf->stream();
     }
     public function exportarReporte(Request $request){
         $gestion=$request->gestion;
-        return Excel::download(new SalidasExport($gestion), 'resumen.xlsx');
+        return Excel::download(new ReporteAnualExport($gestion), 'resumen.xlsx');
     }
 }

@@ -56,18 +56,18 @@ class EntradasController extends Controller
                 ->select('entradas.numero_anual',
                 'entradas.anio',
                 'entradas.fecha',
-                'entradas.created_at',
+                DB::raw('DATE(entradas.created_at) as created_at'),
                 'personal.nomper',
                 'provedores.nompro',
-                DB::raw('sum(entradas.cantidad) as cantidad'),
-                DB::raw('sum(entradas.cantidad * entradas.precio_unitario) as total'),
+                DB::raw('COUNT(entradas.cantidad) as cantidad'),
+                DB::raw('SUM(entradas.cantidad * entradas.precio_unitario) as total'),
                 )->where('anio','=',$request->anio)
                 ->where('saldo_inicial','=',false)
                 ->groupBy('personal.nomper')
                 ->groupBy('provedores.nompro')
                 ->groupBy('entradas.fecha')
                 ->groupBy('entradas.anio')
-                ->groupBy('entradas.created_at')
+                ->groupBy(DB::raw('DATE(entradas.created_at)'))
                 ->groupBy('entradas.numero_anual')
                 ->orderBy('entradas.numero_anual','desc');
         if ($buscar=='') {
@@ -259,7 +259,7 @@ class EntradasController extends Controller
             'subtotales'     => $subtotales,
         ]);
 
-        $pdf->set_paper('letter', 'portrait');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
 
         return $pdf->stream();
     }
@@ -438,7 +438,7 @@ class EntradasController extends Controller
                 'subtotales' => $subtotales,
                 'total' => $total['total_final'],
                 ]);
-        $pdf->set_paper('letter', 'portrait');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
         return $pdf->stream();
         }catch(Exception $e){
 

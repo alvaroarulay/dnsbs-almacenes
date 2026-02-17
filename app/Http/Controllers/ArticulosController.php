@@ -208,8 +208,13 @@ class ArticulosController extends Controller
             'establecimiento'=>$establecimiento->nomestab,
             'ciudad'=>$ciudad->nomciudad,
             ]);
-        $pdf->set_paper('letter', 'portrait');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
         return $pdf->stream();
      
+    }
+    public function manual(){
+           $pdf=Pdf::loadView('plantillapdf.manual');
+        $pdf->set_paper(array(0,0,612,936), 'portrait');
+        return $pdf->stream();
     }
 }

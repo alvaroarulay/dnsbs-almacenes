@@ -111,6 +111,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('/articulos/pdf','ArticulosController@pdfArticulos');
         Route::get('/articulos/partidas/{id}','ArticulosController@partidas');
         Route::get('/articulos/buscar/{cod}','ArticulosController@buscar');
+        Route::get('/manual','ArticulosController@manual');
 
         Route::get('/personal','PersonalController@index');
         Route::get('/personal/todos','PersonalController@todos');
@@ -155,7 +156,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::put('/facturas/actualizar','FacturasController@update');
 
         Route::post('/documentos/guardar','DocumentosController@guardar');
-
+        
+        Route::get('/exportarxls','ReportesController@exportarxls');
         
         });
     });

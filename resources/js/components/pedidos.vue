@@ -616,8 +616,26 @@ import axios from 'axios';
     function agregarProducto(){
         if(validapedido()){return};
         total.value = total.value + 1;
-        arrayPedido.value.push({'idarticulo':idarticulo.value,'codigo':codigoArticulo.value,'descripcion':descripcionArticulo.value,'stock':stock.value,'cantidad':cantidad.value});
-      
+        const nuevoPedido = {
+        idarticulo: idarticulo.value,
+        codigo: codigoArticulo.value,
+        descripcion: descripcionArticulo.value,
+        stock: stock.value,
+        cantidad: cantidad.value
+        };
+        const existe = arrayPedido.value.some(item =>
+        item.descripcion === nuevoPedido.descripcion
+        );
+
+        if (existe) {
+        swal.fire({
+            icon: 'warning',
+            title: 'Advertencia',
+            text: 'Este articulo ya esta en la lista.',
+        });
+        } else {
+        arrayPedido.value.push(nuevoPedido);
+        }
     };
     function updatepedido(index){
         updpedido.value=index;
